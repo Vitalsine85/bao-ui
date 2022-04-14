@@ -19,6 +19,7 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useBaoSwapClaimedCheck, useElderClaimedCheck } from 'hooks/nft/useMint'
 import React from 'react'
 import { Card, Container } from 'react-bootstrap'
+import { Route, useRouteMatch } from 'react-router-dom'
 import { addresses as elderAddresses } from './components/baoElderWL.json'
 import { addresses as baoSwapAddresses } from './components/baoSwapWL.json'
 import { StyledInfo, StyledWrapper } from './components/styles'
@@ -31,6 +32,7 @@ const NFT: React.FC = () => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const elderContract = getElderContract(bao)
 	const baoSwapContract = getBaoSwapContract(bao)
+	const { path } = useRouteMatch()
 
 	return (
 		<Page>
@@ -39,132 +41,134 @@ const NFT: React.FC = () => {
 				title="BaoNFT"
 				subtitle="Check your eligibility and claim your BaoNFT here!"
 			/>
-			<Container>
-				<StyledInfo>
-					<div
-						style={{
-							alignItems: 'center',
-							display: 'flex',
-							flex: 1,
-							justifyContent: 'center',
-						}}
-					>
-						Check your eligibility and claim your BaoNFT here!
-					</div>
-				</StyledInfo>
-				<Spacer size="md" />
-				<StyledWrapper>
-					<Card>
-						<Card.Header>
-							<Label text="BaoElder NFT" />
-						</Card.Header>
-						<Card.Body>
-							<img src={baoElder} width={320} height={300} alt="" />
-						</Card.Body>
-						<Card.Footer>
-							<>
-								{pendingTx ? (
-									<SubmitButton disabled={true}>
-										{typeof pendingTx === 'string' ? (
-											<a
-												href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-												target="_blank"
-											>
-												Pending Transaction
-												<FontAwesomeIcon icon="external-link-alt" />
-											</a>
+			<Route exact path={path}>
+				<Container>
+					<StyledInfo>
+						<div
+							style={{
+								alignItems: 'center',
+								display: 'flex',
+								flex: 1,
+								justifyContent: 'center',
+							}}
+						>
+							Check your eligibility and claim your BaoNFT here!
+						</div>
+					</StyledInfo>
+					<Spacer size="md" />
+					<StyledWrapper>
+						<Card>
+							<Card.Header>
+								<Label text="BaoElder NFT" />
+							</Card.Header>
+							<Card.Body>
+								<img src={baoElder} width={320} height={300} alt="" />
+							</Card.Body>
+							<Card.Footer>
+								<>
+									{pendingTx ? (
+										<SubmitButton disabled={true}>
+											{typeof pendingTx === 'string' ? (
+												<a
+													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
+													target="_blank"
+												>
+													Pending Transaction
+													<FontAwesomeIcon icon="external-link-alt" />
+												</a>
+											) : (
+												'Pending Transaction'
+											)}
+										</SubmitButton>
+									) : !account ? (
+										<SubmitButton disabled={true}>Claim</SubmitButton>
+									) : typeof account === 'string' ? (
+										elderAddresses.includes(account.toLowerCase()) ? (
+											!isElderClaimed ? (
+												<SubmitButton
+													onClick={async () => {
+														handleTx(
+															mintElder(elderContract, account),
+															`Claimed Bao Elder NFT`,
+														)
+													}}
+												>
+													Claim
+												</SubmitButton>
+											) : (
+												<SubmitButton disabled={true}>
+													Already Claimed
+												</SubmitButton>
+											)
 										) : (
-											'Pending Transaction'
-										)}
-									</SubmitButton>
-								) : !account ? (
-									<SubmitButton disabled={true}>Claim</SubmitButton>
-								) : typeof account === 'string' ? (
-									elderAddresses.includes(account.toLowerCase()) ? (
-										!isElderClaimed ? (
-											<SubmitButton
-												onClick={async () => {
-													handleTx(
-														mintElder(elderContract, account),
-														`Claimed Bao Elder NFT`,
-													)
-												}}
-											>
-												Claim
-											</SubmitButton>
-										) : (
-											<SubmitButton disabled={true}>
-												Already Claimed
-											</SubmitButton>
+											<SubmitButton disabled={true}>Not Eligible</SubmitButton>
 										)
 									) : (
-										<SubmitButton disabled={true}>Not Eligible</SubmitButton>
-									)
-								) : (
-									<SubmitButton disabled={true}>
-										Checking Eligibility...
-									</SubmitButton>
-								)}
-							</>
-						</Card.Footer>
-					</Card>
-					<Spacer />
-					<Card>
-						<Card.Header>
-							<Label text="BaoSwap NFT" />
-						</Card.Header>
-						<Card.Body>
-							<img src={baoSwap} width={320} height={300} alt="" />
-						</Card.Body>
-						<Card.Footer>
-							<>
-								{pendingTx ? (
-									<SubmitButton disabled={true}>
-										{typeof pendingTx === 'string' ? (
-											<a
-												href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-												target="_blank"
-											>
-												Pending Transaction
-												<FontAwesomeIcon icon="external-link-alt" />
-											</a>
+										<SubmitButton disabled={true}>
+											Checking Eligibility...
+										</SubmitButton>
+									)}
+								</>
+							</Card.Footer>
+						</Card>
+						<Spacer />
+						<Card>
+							<Card.Header>
+								<Label text="BaoSwap NFT" />
+							</Card.Header>
+							<Card.Body>
+								<img src={baoSwap} width={320} height={300} alt="" />
+							</Card.Body>
+							<Card.Footer>
+								<>
+									{pendingTx ? (
+										<SubmitButton disabled={true}>
+											{typeof pendingTx === 'string' ? (
+												<a
+													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
+													target="_blank"
+												>
+													Pending Transaction
+													<FontAwesomeIcon icon="external-link-alt" />
+												</a>
+											) : (
+												'Pending Transaction'
+											)}
+										</SubmitButton>
+									) : !account ? (
+										<SubmitButton disabled={true}>Claim</SubmitButton>
+									) : typeof account === 'string' ? (
+										baoSwapAddresses.includes(account.toLowerCase()) ? (
+											!isBaoSwapClaimed ? (
+												<SubmitButton
+													onClick={async () => {
+														handleTx(
+															mintBaoSwap(baoSwapContract, account),
+															`Claimed BaoSwap NFT`,
+														)
+													}}
+												>
+													Claim
+												</SubmitButton>
+											) : (
+												<SubmitButton disabled={true}>
+													Already Claimed
+												</SubmitButton>
+											)
 										) : (
-											'Pending Transaction'
-										)}
-									</SubmitButton>
-								) : !account ? (
-									<SubmitButton disabled={true}>Claim</SubmitButton>
-								) : typeof account === 'string' ? (
-									baoSwapAddresses.includes(account.toLowerCase()) ? (
-										!isBaoSwapClaimed ? (
-											<SubmitButton
-												onClick={async () => {
-													handleTx(
-														mintBaoSwap(baoSwapContract, account),
-														`Claimed BaoSwap NFT`,
-													)
-												}}
-											>
-												Claim
-											</SubmitButton>
-										) : (
-											<SubmitButton disabled={true}>
-												Already Claimed
-											</SubmitButton>
+											<SubmitButton disabled={true}>Not Eligible</SubmitButton>
 										)
 									) : (
-										<SubmitButton disabled={true}>Not Eligible</SubmitButton>
-									)
-								) : (
-									<SubmitButton disabled={true}>
-										Checking Eligibility...
-									</SubmitButton>
-								)}
-							</>
-						</Card.Footer>
-					</Card>
-				</StyledWrapper>
-			</Container>
+										<SubmitButton disabled={true}>
+											Checking Eligibility...
+										</SubmitButton>
+									)}
+								</>
+							</Card.Footer>
+						</Card>
+					</StyledWrapper>
+				</Container>
+			</Route>
 		</Page>
 	)
 }
