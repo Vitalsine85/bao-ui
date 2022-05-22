@@ -11,6 +11,7 @@ import {
 } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import styled from 'styled-components'
+import { decToBn } from 'utils'
 import { getDisplayBalance } from 'utils/numberFormat'
 
 export const Overview = () => {
@@ -132,7 +133,14 @@ export const Overview = () => {
 							>
 								{healthFactor &&
 									(healthFactor.isFinite() ? (
-										healthFactor.toFixed(2)
+										healthFactor.isLessThanOrEqualTo(0) ? (
+											<p style={{ color: 'green' }}>-</p>
+										) :
+										healthFactor.gt(10000) ? (
+											'> 10000'
+										) : (
+											healthFactor.toFixed(2)
+										)
 									) : (
 										<FontAwesomeIcon icon="infinity" />
 									))}
