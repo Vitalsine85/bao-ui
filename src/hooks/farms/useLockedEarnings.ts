@@ -3,14 +3,14 @@ import BigNumber from 'bignumber.js'
 import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import useBao from '../base/useBao'
-import useBlock from '../base/useBlock'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
 
 const useLockedEarnings = () => {
   const [balance, setBalance] = useState(new BigNumber(0))
   const { account, library } = useWeb3React()
   const bao = useBao()
   const baoContract = getBaoContract(bao)
-  const block = useBlock()
+  const { transactions } = useTransactionProvider()
 
   const fetchBalance = useCallback(async () => {
     const balance = await getLockedEarned(baoContract, account)
@@ -21,7 +21,7 @@ const useLockedEarnings = () => {
     if (account && baoContract && bao) {
       fetchBalance()
     }
-  }, [account, block, baoContract, setBalance, bao])
+  }, [account, transactions, baoContract, setBalance, bao])
 
   return balance
 }

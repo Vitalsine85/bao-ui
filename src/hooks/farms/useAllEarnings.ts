@@ -4,15 +4,15 @@ import { useCallback, useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { provider } from 'web3-core'
 import useBao from '../base/useBao'
-import useBlock from '../base/useBlock'
+import useTransactionProvider from 'hooks/base/useTransactionProvider'
 
 const useAllEarnings = () => {
+  const { transactions } = useTransactionProvider()
   const [balances, setBalance] = useState([] as Array<BigNumber>)
   const { account } = useWeb3React()
   const bao = useBao()
   const farms = getFarms(bao)
   const masterChefContract = getMasterChefContract(bao)
-  const block = useBlock()
 
   const fetchAllBalances = useCallback(async () => {
     const balances: Array<BigNumber> = await Promise.all(
@@ -27,7 +27,7 @@ const useAllEarnings = () => {
     if (account && masterChefContract && bao) {
       fetchAllBalances()
     }
-  }, [account, block, masterChefContract, setBalance, bao])
+  }, [account, masterChefContract, setBalance, bao, transactions])
 
   return balances
 }
