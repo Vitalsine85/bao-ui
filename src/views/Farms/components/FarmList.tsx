@@ -3,6 +3,7 @@ import Config from 'bao/lib/config'
 import { getMasterChefContract } from 'bao/utils'
 import BigNumber from 'bignumber.js'
 import { SpinnerLoader } from 'components/Loader'
+import { StyledLoadingWrapper } from 'components/Loader/Loader'
 import Spacer from 'components/Spacer'
 import { Farm } from 'contexts/Farms'
 import { PoolType } from 'contexts/Farms/types'
@@ -14,9 +15,8 @@ import { Col, Container, Form, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import GraphUtil from 'utils/graph'
 import Multicall from 'utils/multicall'
-import { decimate, getDisplayBalance } from 'utils/numberFormat'
+import { decimate, getDisplayBalance, truncateNumber } from 'utils/numberFormat'
 import { FarmModal } from './Modals'
-import { StyledLoadingWrapper } from './styles'
 
 export interface FarmWithStakedValue extends Farm {
 	apy: BigNumber
@@ -142,14 +142,17 @@ export const FarmList: React.FC = () => {
 					label="Show Archived Farms"
 					checked={archived}
 					onChange={(e) => showArchived(e.currentTarget.checked)}
+					disabled={true}
 				/>
 			</Container>
-			<Row>
+			<Row className="farmRow">
 				<Col>
 					{!account ? (
 						<FarmListHeader headers={['Pool', 'APR', 'TVL']} />
-					) : (
+					) : window.screen.width > 320 ? (
 						<FarmListHeader headers={['Pool', 'APR', 'LP Staked', 'TVL']} />
+					) : (
+						<FarmListHeader headers={['Pool', 'APR', 'LP Staked']} />
 					)}
 					{!archived ? (
 						<>
@@ -225,8 +228,8 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 				disabled={!account}
 			>
 				<StyledAccordionHeader>
-					<Row lg={7} style={{ width: '100%' }}>
-						<Col style={{ fontWeight: 700 }}>
+					<Row lg={7} style={{ width: '100%' }} className="farmRow">
+						<Col>
 							<FarmIconContainer>
 								<FarmIcon src={farm.iconA} />
 								<FarmIcon src={farm.iconB} />
@@ -248,8 +251,30 @@ const FarmListItem: React.FC<FarmListItemProps> = ({ farm }) => {
 								<SpinnerLoader />
 							)}
 						</Col>
-						{account && <Col>{`$${getDisplayBalance(farm.stakedUSD, 0)}`}</Col>}
-						<Col>{`$${getDisplayBalance(farm.tvl, 0)}`}</Col>
+						{account && (
+							<Col>
+								$
+								{window.screen.width > 1200
+									? getDisplayBalance(farm.stakedUSD, 0)
+									: truncateNumber(farm.stakedUSD, 0)}
+							</Col>
+						)}
+						{(account && window.screen.width > 320) && (
+							<Col>
+								$
+								{window.screen.width > 1200
+									? getDisplayBalance(farm.tvl, 0)
+									: truncateNumber(farm.tvl, 0)}
+							</Col>
+						)}
+						{!account && (
+							<Col>
+								$
+								{window.screen.width > 1200
+									? getDisplayBalance(farm.tvl, 0)
+									: truncateNumber(farm.tvl, 0)}
+							</Col>
+						)}
 					</Row>
 				</StyledAccordionHeader>
 			</StyledAccordionItem>
@@ -340,7 +365,7 @@ const StyledAccordionHeader = styled.div`
 		background: ${(props) => props.theme.color.primary[100]};
 		color: ${(props) => props.theme.color.text[100]};
 		padding: 1.25rem;
-		border: none;
+		border: ${(props) => props.theme.border.default};
 		border-radius: 8px;
 
 		&:hover,
@@ -348,7 +373,6 @@ const StyledAccordionHeader = styled.div`
 		&:active {
 			background: ${(props) => props.theme.color.primary[200]};
 			color: ${(props) => props.theme.color.text[100]};
-			border: none;
 			box-shadow: none;
 		}
 		

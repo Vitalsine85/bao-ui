@@ -18,11 +18,9 @@ const connectorsByName: { [name: string]: AbstractConnector } = {
 const WalletProviderModal = ({ onHide, show }: ModalProps) => {
 	const {
 		connector,
-		library,
 		chainId,
 		account,
 		activate,
-		deactivate,
 		active,
 		error,
 	} = useWeb3React()
@@ -134,10 +132,6 @@ export const ConnectorIconContainer = styled.div`
 	display: inline-block;
 	vertical-align: middle;
 	color: ${(props) => props.theme.color.text[100]};
-
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		display: none;
-	}
 `
 
 export default WalletProviderModal

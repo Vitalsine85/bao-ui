@@ -6,12 +6,13 @@ import Balances from './components/Balances'
 import { FarmList } from './components/FarmList'
 
 const Farms: React.FC = () => {
+
 	return (
 		<Page>
 			<PageHeader
 				icon=""
 				title="Farms"
-				subtitle="Earn POLLY by staking Sushiswap LP Tokens!"
+				subtitle="Earn BAO by staking Sushiswap LP Tokens!"
 			/>
 			<Container>
 				<Balances />

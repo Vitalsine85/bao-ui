@@ -40,16 +40,16 @@ const theme = (dark = false) => ({
   },
   boxShadow: dark
     ? {
-        default: '#625f65 1px 1px 0px inset',
-        invert: '#625f65 1px 1px 0px',
+        default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
+        invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
       }
     : {
-        default: '#f7f4f2 1px 1px 0px inset',
-        invert: '#f7f4f2 1px 1px 0px',
+        default: '0px 4px 28px rgba(0, 0, 0, 0.15)',
+        invert: '0px 4px 28px rgba(0, 0, 0, 0.15)',
       },
   border: dark
     ? {
-        default: '1px solid #391818',
+        default: '1px solid #562424',
       }
     : {
         default: '1px solid #ded4ce',
@@ -65,7 +65,7 @@ const theme = (dark = false) => ({
   backgroundGradient: dark
     ? {
         default:
-          'radial-gradient(circle at center, #572525, #210e0e 50%) fixed',
+          'radial-gradient(circle at center, #210e0e, #210e0e 50%) fixed',
       }
     : {
         default:

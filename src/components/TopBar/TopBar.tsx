@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import MenuIcon from 'components/icons/MenuIcon'
+import { MenuIcon } from 'components/Icon'
 import Logo from 'components/Logo'
 import React from 'react'
 import { Container } from 'react-bootstrap'
@@ -75,8 +75,7 @@ const StyledTopBarInner = styled.div`
 	display: flex;
 	height: ${(props) => props.theme.topBarSize}px;
 	justify-content: space-between;
-	max-width: ${(props) => props.theme.siteWidth}px;
-	width: 90%;
+	width: 98%;
 	z-index: 999999;
 `
 

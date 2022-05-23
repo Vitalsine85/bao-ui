@@ -3,20 +3,17 @@ import { useWeb3React } from '@web3-react/core'
 import wethIcon from 'assets/img/assets/WETH.png'
 import baoIcon from 'assets/img/logo.svg'
 import Config from 'bao/lib/config'
-import { BigNumber } from 'bignumber.js'
 import { CloseButton } from 'components/Button/Button'
+import { MaxLabel } from 'components/Label'
 import { SpinnerLoader } from 'components/Loader'
 import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import _ from 'lodash'
 import React, { useCallback } from 'react'
-import { Col, Modal, ModalProps } from 'react-bootstrap'
+import { Col, Modal, ModalProps, Row } from 'react-bootstrap'
 import styled from 'styled-components'
 import { getDisplayBalance } from 'utils/numberFormat'
-import { MaxLabel } from 'views/Farms/components/Actions'
-import { StatWrapper } from 'views/Farms/components/Balances'
-import { HeaderWrapper } from 'views/Markets/components/styles'
 import { Button } from '../../Button'
 import Spacer from '../../Spacer'
 
@@ -39,12 +36,10 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide} onHide={hideModal} />
+			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					<HeaderWrapper>
-						<p>My Account</p>
-					</HeaderWrapper>
+					<p>My Account</p>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body>
@@ -54,29 +49,28 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={wethIcon} />
+										<img src={wethIcon} alt="wETH" />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
 											{getDisplayBalance(wethBalance.toFixed(4))}
 										</WalletBalanceValue>
-										<WalletBalanceTicker>ETH Balance</WalletBalanceTicker>
+										<WalletBalanceTicker>wETH Balance</WalletBalanceTicker>
 									</WalletBalanceText>
 								</InnerInnerWalletBalance>
 							</InnerWalletBalance>
 						</WalletBalance>
-						<WalletBalanceSpacerBig />
 						<WalletBalance>
 							<InnerWalletBalance>
 								<InnerInnerWalletBalance>
 									<WalletBalanceImage>
-										<img src={baoIcon} />
+										<img src={baoIcon} alt="BAO" />
 									</WalletBalanceImage>
 									<WalletBalanceSpace />
 									<WalletBalanceText>
 										<WalletBalanceValue>
-											{getDisplayBalance(baoBalance.toFixed(4))}
+											{getDisplayBalance(baoBalance)}
 										</WalletBalanceValue>
 										<WalletBalanceTicker>BAO Balance</WalletBalanceTicker>
 									</WalletBalanceText>
@@ -87,38 +81,37 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 				</WalletBalances>
 				<>
 					<Spacer size="sm" />
-					<StatWrapper>
+					<TransactionWrapper>
 						<span>
 							<span style={{ float: 'left', fontSize: '0.875rem' }}>
 								Recent Transactions
 							</span>
 							{Object.keys(transactions).length > 0 && (
 								<small>
-									<ClearButton
-										onClick={() => {
-											localStorage.setItem('transactions', '{}')
-											window.location.reload()
-										}}
-									>
-										{' '}
-										<span>
+									<span>
+										<ClearButton
+											onClick={() => {
+												localStorage.setItem('transactions', '{}')
+												window.location.reload()
+											}}
+										>
 											<FontAwesomeIcon
 												icon="times"
 												style={{ verticalAlign: 'middle' }}
 											/>{' '}
 											Clear
-										</span>
-									</ClearButton>
+										</ClearButton>
+									</span>
 								</small>
 							)}
 						</span>
-						<Spacer size="sm" />
+						<Spacer size="md" />
 						{Object.keys(transactions).length > 0 ? (
 							<>
 								{_.reverse(Object.keys(transactions))
 									.slice(0, 5)
 									.map((txHash) => (
-										<StatText>
+										<StatText key={txHash}>
 											<MaxLabel>
 												{transactions[txHash].receipt ? (
 													<FontAwesomeIcon
@@ -144,7 +137,7 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 								</MaxLabel>
 							</StatText>
 						)}
-					</StatWrapper>
+					</TransactionWrapper>
 				</>
 			</Modal.Body>
 			<Modal.Footer>
@@ -158,17 +151,17 @@ const AccountModal = ({ onHide, show }: ModalProps) => {
 	)
 }
 
-const WalletBalances = styled(Col)`
+const WalletBalances = styled.div`
 	display: flex;
 	padding: 24px;
 `
 
-const WalletBalancesInner = styled.div`
+const WalletBalancesInner = styled(Row)`
 	display: flex;
 	width: 100%;
 `
 
-const WalletBalance = styled.div`
+const WalletBalance = styled(Col)`
 	flex: 1 1 0%;
 	display: block;
 `
@@ -191,7 +184,7 @@ const WalletBalanceImage = styled.div`
 	min-width: 48px;
 	min-height: 48px;
 	border-radius: 40px;
-	background-color: ${(props) => props.theme.color.primary[200]};
+	background-color: ${(props) => props.theme.color.primary[400]};
 	border: none;
 
 	img {
@@ -207,13 +200,6 @@ const WalletBalanceSpace = styled.div`
 	min-height: 8px;
 	min-width: 8px;
 	width: 8px;
-`
-
-const WalletBalanceSpacerBig = styled.div`
-	height: 24px;
-	min-height: 24px;
-	min-width: 24px;
-	width: 24px;
 `
 
 const WalletBalanceText = styled.div`
@@ -264,13 +250,35 @@ const StatText = styled.div`
 const ClearButton = styled.button`
 	float: right;
 	vertical-align: middle;
-	background-color: ${(props) => props.theme.color.primary[400]} !important;
+	background-color: ${(props) => props.theme.color.primary[300]} !important;
 	border-radius: 8px;
 	border: none;
 	color: ${(props) => props.theme.color.text[100]};
 
 	&:hover {
-		background-color: ${(props) => props.theme.color.primary[500]} !important;
+		background-color: ${(props) => props.theme.color.primary[400]} !important;
+	}
+`
+
+export const TransactionWrapper = styled(Col)`
+	background-color: ${(props) => props.theme.color.primary[200]};
+	margin: 0.5rem 0.5rem;
+	border-radius: 8px;
+	position: relative;
+	flex: 1 1 0%;
+	padding-inline-start: 1rem;
+	padding-inline-end: 1rem;
+	padding: 1.25rem 16px;
+	border: none;
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		padding: 1rem 12px;
+		padding-inline-start: 0.75rem;
+		padding-inline-end: 0.75rem;
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
+		min-width: 120px;
 	}
 `
 

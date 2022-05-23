@@ -21,6 +21,9 @@ const Nav: React.FC = () => {
 			<StyledLink exact activeClassName="active" to={{ pathname: '/NFT' }}>
 				NFT
 			</StyledLink>
+			<StyledLink exact activeClassName="active" to={{ pathname: '/NFT' }}>
+				NFT
+			</StyledLink>
 			<StyledAbsoluteLink
 				href="https://snapshot.page/#/baovotes.eth"
 				target="_blank"

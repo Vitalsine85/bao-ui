@@ -125,7 +125,6 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 	outline: none;
 	padding-left: ${(props) => props.padding}px;
 	padding-right: ${(props) => props.padding}px;
-	pointer-events: ${(props) => (!props.disabled ? undefined : 'none')};
 	width: ${(props) => (props.width ? props.width : '100%')};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	position: relative;
@@ -144,13 +143,18 @@ const StyledButton = styled.button.attrs((attrs: StyledButtonProps) => ({
 			${(props) => -props.theme.spacing[3]}px;
 	}
 
+	&:hover {
+		background: ${(props) => props.theme.color.primary[300]};
+		cursor: pointer;
+	}
+
 	&:hover,
+	&:focus,
 	&:active {
-		background-color: ${(props) => props.theme.color.primary[300]};
-		color: ${(props) => props.theme.color.text[100]};
 		cursor: ${(props) =>
 			props.disabled ? 'not-allowed' : 'pointer'} !important;
 	}
+
 `
 
 const StyledLink = styled(Link)`
@@ -190,7 +194,7 @@ const ButtonLink = styled.a`
 export const MaxButton = styled.a`
 	padding: ${(props) => props.theme.spacing[2]}px;
 	color: ${(props) => props.theme.color.text[100]};
-	background: ${(props) => props.theme.color.primary[300]};
+	background: ${(props) => props.theme.color.primary[200]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	vertical-align: middle;
 	margin-right: ${(props) => props.theme.spacing[2]}px;
@@ -243,6 +247,7 @@ const NavButtonWrapper = styled.div`
 	display: flex;
 	width: 100%;
 	cursor: pointer;
+	padding: 12px;
 `
 
 const NavButton = styled.button`
@@ -265,14 +270,14 @@ const NavButton = styled.button`
 	border-radius: 8px;
 	overflow: hidden;
 	border: ${(props) => props.theme.border.default};
-	background: ${(props) => props.theme.color.primary[300]};
+	background: ${(props) => props.theme.color.primary[200]};
 
 	&:focus {
 		outline: 0;
 	}
 
 	&:hover {
-		background: ${(props) => props.theme.color.primary[400]};
+		background: ${(props) => props.theme.color.primary[300]};
 		cursor: pointer;
 		color: ${(props) => props.theme.color.text[100]};
 	}
@@ -313,7 +318,7 @@ export const StyledCloseButton = styled.a`
 
 	&:hover {
 		cursor: pointer;
-		color: ${(props) => props.theme.color.text[100]};
+		color: ${(props) => props.theme.color.text[300]};
 	}
 `
 
@@ -358,6 +363,7 @@ export const SubmitButton = styled.button`
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
 	transition: 200ms;
 	overflow: hidden;
+	margin-bottom: 6px;
 
 	&:focus {
 		outline: 0;
@@ -398,8 +404,8 @@ export const WalletButton = styled.button`
 	padding-inline-start: 1rem;
 	padding-inline-end: 1rem;
 	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: none;
-	background-color: ${(props) => props.theme.color.primary[100]};
+	border: ${(props) => props.theme.border.default};
+	background-color: ${(props) => props.theme.color.primary[200]};
 	outline: transparent solid 2px;
 	color: ${(props) => props.theme.color.text[100]};
 	opacity: ${(props) => (props.disabled ? 0.5 : 1)};
@@ -412,7 +418,7 @@ export const WalletButton = styled.button`
 	}
 
 	  &:hover{
-		background: ${(props) => props.theme.color.primary[200]};
+		background: ${(props) => props.theme.color.primary[300]};
 		cursor: pointer;
 	  }
 	}
@@ -423,4 +429,70 @@ export const WalletButton = styled.button`
 		color: ${(props) => (!props.disabled ? props.color : `${props.color}`)};
 		cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')} !important;
 	}
+`
+
+export const ButtonStack = styled.div`
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+`
+
+export const CornerButtons = styled.div`
+  float: right;
+  top: ${(props) => props.theme.spacing[3]}px;
+  right: ${(props) => props.theme.spacing[4]}px;
+  font-size: 1.5rem;
+  position: absolute;
+  color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  @media (min-width: ${(props) => props.theme.breakpoints.sm}px) {
+    right: 10%;
+  }
+`
+
+export const CornerButton = styled.a`
+  float: right;
+  margin-top: ${(props) => props.theme.spacing[2]}px;
+  margin-right: ${(props) => props.theme.spacing[3]}px;
+  font-size: 1.5rem;
+  vertical-align: middle;
+  color: ${(props) => props.theme.color.text[100]};
+  border: ${(props) => props.theme.border.default};
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+
+export const PrefButtons = styled.div`
+  margin: auto;
+
+  > button {
+    float: left;
+    margin-left: ${(props) => props.theme.spacing[2]}px;
+    margin-top: ${(props) => props.theme.spacing[4]}px;
+    color: ${(props) => props.theme.color.text[100]};
+	border: ${(props) => props.theme.border.default};
+    border-radius: ${(props) => props.theme.borderRadius}px;
+    width: 48px;
+    background: ${(props) => props.theme.color.primary[200]};
+
+    &:hover,
+    &.active,
+    &:active,
+    &:focus {
+      color: ${(props) => props.theme.color.text[100]};
+      background: ${(props) => props.theme.color.primary[300]};
+      box-shadow: none !important;
+    }
+  }
+
+  @media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+    display: none;
+  }
 `

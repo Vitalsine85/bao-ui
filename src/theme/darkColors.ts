@@ -1,8 +1,3 @@
-export const background = {
-  100: '#210e0e', //dark mode
-  200: '#fff8ee', //dark mode
-}
-
 export const monochrome = {
   100: '#e5e5e5',
   200: '#cccccc',
@@ -19,11 +14,16 @@ export const red = '#d00000'
 export const green = '#008000'
 export const blue = '#0000f0'
 
+export const background = {
+  100: '#210e0e', //dark mode
+  200: '#fff8ee', //dark mode
+}
+
 export const primary = {
-  100: '#210e0e',
-  200: '#391818',
-  300: '#481e1e',
-  400: '#562424',
+  100: '#391818',
+  200: '#481e1e',
+  300: '#562424',
+  400: '#622a2a',
   500: '#622a2a',
 }
 
@@ -42,8 +42,8 @@ export const secondary = {
 export const text = {
   100: '#fff8ee', //primary
   200: '#aa9585', //secondary
-  300: '#FFD84B', //hover link
-  400: '#CC9902', //active link
+  300: '#CC9902', //hover link
+  400: '#FFD84B', //active link
 }
 
 export const accent = {

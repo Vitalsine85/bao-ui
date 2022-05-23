@@ -61,3 +61,4 @@ export const useApprovals = (pendingTx: string | boolean): Approvals => {
     approvals,
   }
 }
+

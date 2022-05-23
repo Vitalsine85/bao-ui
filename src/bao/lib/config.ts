@@ -21,6 +21,9 @@ export default {
     baoUSD: '0x7945b0A6674b175695e5d1D08aE1e6F13744Abb0',
     WETH: '0xc778417E063141139Fce010982780140Aa0cD5Ab',
     DEAD: '0x000000000000000000000000000000000000dead',
+    // NFTs
+    baoElder: '0x39c1f6e78c5200674c84c46dc5bf85ba9f6f630a',
+    baoSwap: '0x36e58282a053f888881cdaa4ba4f44dc7af15024',
   },
   contracts: {
     bao: {

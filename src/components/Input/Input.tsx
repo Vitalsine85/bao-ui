@@ -3,17 +3,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 export interface InputProps {
+	endAdornment?: React.ReactNode
 	onChange: (e: React.FormEvent<HTMLInputElement>) => void
 	placeholder?: string
+	startAdornment?: React.ReactNode
 	value: string
 }
 
-export interface BasketInputProps extends InputProps {
-	endAdornment?: React.ReactNode
-	startAdornment?: React.ReactNode
-}
-
-export const BasketInput: React.FC<BasketInputProps> = ({
+const Input: React.FC<InputProps> = ({
 	endAdornment,
 	onChange,
 	placeholder,
@@ -21,7 +18,7 @@ export const BasketInput: React.FC<BasketInputProps> = ({
 	value,
 }) => {
 	return (
-		<BasketInputWrapper>
+		<StyledInputWrapper>
 			{!!startAdornment && startAdornment}
 			<StyledInput
 				placeholder={placeholder}
@@ -29,13 +26,13 @@ export const BasketInput: React.FC<BasketInputProps> = ({
 				onChange={onChange}
 			/>
 			{!!endAdornment && endAdornment}
-		</BasketInputWrapper>
+		</StyledInputWrapper>
 	)
 }
 
-const BasketInputWrapper = styled.div`
+const StyledInputWrapper = styled.div`
 	align-items: center;
-	background: ${(props) => props.theme.color.primary[200]};
+	background: ${(props) => props.theme.color.primary[400]};
 	border-radius: ${(props) => props.theme.borderRadius}px;
 	display: flex;
 	height: 50px;
@@ -43,6 +40,68 @@ const BasketInputWrapper = styled.div`
 `
 
 const StyledInput = styled.input`
+	width: 100%;
+	min-width: 0px;
+	outline-offset: 2px;
+	position: relative;
+	appearance: none;
+	transition-property: all;
+	transition-duration: 200ms;
+	font-size: 1rem;
+	height: 50px;
+	text-align: start;
+	font-weight: ${(props) => props.theme.fontWeight.medium};
+	padding-right: 0.5rem;
+	outline: transparent solid 2px;
+	border-radius: 8px;
+	border-style: solid;
+	border-image: initial;
+	border-color: inherit;
+	color: ${(props) => props.theme.color.text[100]};
+	background: none;
+	background-color: transparent;
+	border-width: 0px;
+
+	&:disabled {
+		color: ${(props) => props.theme.color.text[200]};
+	}
+
+	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+		font-size: 0.875rem;
+	}
+`
+
+
+export default Input
+
+export interface BalanceInputProps extends InputProps {
+	label?: React.ReactNode
+	onMaxClick: (e: any) => void
+	disabled?: boolean
+}
+
+export const BalanceInput = ({
+	value,
+	label,
+	onChange,
+	onMaxClick,
+	disabled,
+}: BalanceInputProps) => (
+	<BalanceInputContainer>
+		<BalanceInputWrapper>
+			<StyledBalanceInput
+				value={value}
+				onChange={onChange}
+				placeholder="0"
+				disabled={disabled}
+			/>
+			{!disabled && <MaxButton onClick={onMaxClick}>MAX</MaxButton>}
+		</BalanceInputWrapper>
+		{typeof label === 'string' ? <p>{label}</p> : label}
+	</BalanceInputContainer>
+)
+
+const StyledBalanceInput = styled.input`
 	width: 100%;
 	min-width: 0px;
 	outline-offset: 2px;
@@ -76,40 +135,11 @@ const StyledInput = styled.input`
 	}
 `
 
-export default BasketInput
-
-export interface BalanceInputProps extends InputProps {
-	label?: React.ReactNode
-	onMaxClick: (e: any) => void
-	disabled?: boolean
-}
-
-export const BalanceInput = ({
-	value,
-	label,
-	onChange,
-	onMaxClick,
-	disabled,
-}: BalanceInputProps) => (
-	<BalanceInputContainer>
-		<BalanceInputWrapper>
-			<StyledInput
-				value={value}
-				onChange={onChange}
-				placeholder="0"
-				disabled={disabled}
-			/>
-			{!disabled && <MaxButton onClick={onMaxClick}>MAX</MaxButton>}
-		</BalanceInputWrapper>
-		{typeof label === 'string' ? <p>{label}</p> : label}
-	</BalanceInputContainer>
-)
-
 const BalanceInputContainer = styled.div`
 	display: flex;
 	align-items: center;
 	width: 100%;
-	background-color: ${(props) => props.theme.color.primary[200]};
+	background-color: ${(props) => props.theme.color.primary[400]};
 	border-radius: 8px;
 	height: 50px;
 	border: none;
@@ -120,4 +150,14 @@ const BalanceInputWrapper = styled.div`
 	align-items: center;
 	width: 100%;
 	position: relative;
+`
+
+export const InputStack = styled.div`
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin-inline: 0px;
+  margin-bottom: 0px;
 `

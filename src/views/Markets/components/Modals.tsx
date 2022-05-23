@@ -1,8 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import BigNumber from 'bignumber.js'
-import { NavButtons } from 'components/Button'
+import { BalanceWrapper } from 'components/Balance'
+import { CloseButton, NavButtons } from 'components/Button'
+import { IconFlex } from 'components/Icon'
 import { BalanceInput } from 'components/Input'
+import { AssetLabel, LabelEnd, LabelStack, LabelStart, MaxLabel } from 'components/Label'
 import useBao from 'hooks/base/useBao'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import {
@@ -18,16 +21,8 @@ import styled from 'styled-components'
 import { decimate, exponentiate } from 'utils/numberFormat'
 import { MarketButton } from './MarketButton'
 import { MarketStats } from './Stats'
-import {
-	AssetLabel,
-	AssetStack,
-	CloseButton,
-	HeaderWrapper,
-	IconFlex,
-	LabelStack,
-	MaxLabel,
-	ModalStack,
-} from './styles'
+import { AssetStack, HeaderWrapper, ModalStack } from './styles'
+
 
 export enum MarketOperations {
 	supply = 'Supply',
@@ -137,9 +132,7 @@ const MarketModal = ({
 	return (
 		<>
 			<Modal show={show} onHide={hideModal} centered>
-				<CloseButton onClick={hideModal}>
-					<FontAwesomeIcon icon="times" />
-				</CloseButton>
+			<CloseButton onHide={hideModal} onClick={onHide} />
 				<Modal.Header>
 					<Modal.Title id="contained-modal-title-vcenter">
 						<HeaderWrapper>
@@ -149,12 +142,12 @@ const MarketModal = ({
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<ModalStack>
-						<NavButtons
+				<NavButtons
 							options={operations}
 							active={operation}
 							onClick={setOperation}
 						/>
+					<ModalStack>
 						<BalanceWrapper>
 							<Col xs={4}>
 								<LabelStart></LabelStart>
@@ -241,51 +234,3 @@ export const MarketBorrowModal = ({
 		onHide={onHide}
 	/>
 )
-
-export const LabelEnd = styled.div`
-	display: flex;
-	align-items: flex-end;
-	justify-content: flex-end;
-	width: 100%;
-
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		font-size: 0.75rem !important;
-	}
-`
-
-export const LabelStart = styled.div`
-	display: flex;
-	align-items: flex-start;
-	justify-content: flex-start;
-	width: 100%;
-
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		font-size: 0.75rem !important;
-	}
-`
-
-export const FeeLabel = styled.p`
-	color: ${(props) => props.theme.color.text[200]};
-	font-size: 0.875rem;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	margin-bottom: 0px;
-
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		font-size: 0.75rem;
-	}
-`
-
-const BalanceWrapper = styled(Row)`
-	padding: 0.25rem;
-`
-
-export const QuestionIcon = styled(FontAwesomeIcon)`
-	color: ${(props) => props.theme.color.text[200]};
-
-	&:hover,
-	&:focus {
-		color: ${(props) => props.theme.color.text[100]};
-		animation: 200ms;
-		cursor: pointer;
-	}
-`

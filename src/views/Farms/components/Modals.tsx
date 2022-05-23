@@ -1,10 +1,8 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useWeb3React } from '@web3-react/core'
 import baoIcon from 'assets/img/logo.svg'
-import { NavButtons } from 'components/Button'
-import ExternalLink from 'components/ExternalLink'
+import { CloseButton, NavButtons } from 'components/Button'
+import { IconContainer, StyledIcon } from 'components/Icon'
 import { SpinnerLoader } from 'components/Loader'
-import { StatBlock } from 'components/Stats'
+import { FeeBlock } from 'components/Stats'
 import useBao from 'hooks/base/useBao'
 import useBlockDiff from 'hooks/base/useBlockDiff'
 import useTokenBalance from 'hooks/base/useTokenBalance'
@@ -14,13 +12,8 @@ import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import React, { useCallback, useMemo, useState } from 'react'
 import { Modal, ModalProps, Row } from 'react-bootstrap'
 import { getContract } from 'utils/erc20'
-import {
-	CloseButton,
-	HeaderWrapper,
-	ModalStack,
-} from 'views/Markets/components/styles'
 import { Rewards, Stake, Unstake } from './Actions'
-import { FarmIcon, FarmIconContainer, FarmWithStakedValue } from './FarmList'
+import { FarmWithStakedValue } from './FarmList'
 
 type FarmModalProps = ModalProps & {
 	farm: FarmWithStakedValue
@@ -32,7 +25,6 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 	const operations = ['Stake', 'Unstake', 'Rewards']
 	const [operation, setOperation] = useState(operations[0])
 	const { pid } = farm
-	const [val, setVal] = useState<string>('')
 	const bao = useBao()
 
 	const lpTokenAddress = farm.lpTokenAddress
@@ -46,40 +38,33 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 
 	const hideModal = useCallback(() => {
 		onHide()
-		setVal('')
 	}, [onHide])
 
 	return (
 		<Modal show={show} onHide={hideModal} centered dialogClassName="modal-50h">
-			<CloseButton onClick={onHide}>
-				<FontAwesomeIcon icon="times" />
-			</CloseButton>
+			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					<HeaderWrapper>
-						{operation}{' '}
-						{operation !== 'Rewards' ? (
-							<>
-								<FarmIconContainer style={{ marginLeft: '10px' }}>
-									<FarmIcon src={farm.iconA} />
-									<FarmIcon src={farm.iconB} />
-								</FarmIconContainer>
-							</>
-						) : (
-							<FarmIconContainer style={{ marginLeft: '10px' }}>
-								<FarmIcon src={baoIcon} />
-							</FarmIconContainer>
-						)}
-					</HeaderWrapper>
+					{operation}{' '}
+					{operation !== 'Rewards' ? (
+						<>
+							<IconContainer style={{ marginLeft: '10px' }}>
+								<StyledIcon src={farm.iconA} />
+								{farm.iconB !== null && <StyledIcon src={farm.iconB} />}
+							</IconContainer>
+						</>
+					) : (
+						<IconContainer style={{ marginLeft: '10px' }}>
+							<StyledIcon src={baoIcon} />
+						</IconContainer>
+					)}
 				</Modal.Title>
 			</Modal.Header>
-			<ModalStack>
-				<NavButtons
-					options={operations}
-					active={operation}
-					onClick={setOperation}
-				/>
-			</ModalStack>
+			<NavButtons
+				options={operations}
+				active={operation}
+				onClick={setOperation}
+			/>
 			{operation === 'Stake' && (
 				<Stake
 					lpContract={lpContract}
@@ -89,6 +74,7 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 					poolType={farm.poolType}
 					max={tokenBalance}
 					pairUrl={farm.pairUrl}
+					onHide={onHide}
 				/>
 			)}
 			{operation === 'Unstake' && (
@@ -99,6 +85,7 @@ export const FarmModal: React.FC<FarmModalProps> = ({ farm, show, onHide }) => {
 					max={stakedBalance}
 					pairUrl={farm.pairUrl}
 					lpTokenAddress={farm.lpTokenAddress}
+					onHide={onHide}
 				/>
 			)}
 			{operation === 'Rewards' && <Rewards pid={farm.pid} />}
@@ -126,19 +113,15 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 
 	return (
 		<Modal show={show} onHide={hideModal} centered>
-			<CloseButton onClick={onHide}>
-				<FontAwesomeIcon icon="times" />
-			</CloseButton>
+			<CloseButton onHide={hideModal} onClick={onHide} />
 			<Modal.Header>
 				<Modal.Title id="contained-modal-title-vcenter">
-					<HeaderWrapper>
-						<p style={{ fontWeight: 700 }}>Fee Details</p>
-					</HeaderWrapper>
+					<p style={{ fontWeight: 700 }}>Fee Details</p>
 				</Modal.Title>
 			</Modal.Header>
 			<Modal.Body style={{ paddingTop: '0' }}>
-				<p style={{ textAlign: 'center' }}>❗BE AWARE OF WITHDRAWAL FEES❗</p>
-				<StatBlock
+				<p style={{ textAlign: 'center' }}><span role="img" aria-label="important">❗</span>BE AWARE OF WITHDRAWAL FEES<span role="img" aria-label="important">❗</span></p>
+				<FeeBlock
 					label=""
 					stats={[
 						{
@@ -176,12 +159,12 @@ export const FeeModal: React.FC<FeeModalProps> = ({ pid, show, onHide }) => {
 					]}
 				/>
 				<Row>
-					<p style={{ textAlign: 'center' }}>
+					<p style={{ textAlign: 'center', padding: '16px' }}>
 						Your first deposit activates and each withdraw resets the timer for
 						penalities and fees, this is pool based. Be sure to read the{' '}
-						<ExternalLink href="https://docs.bao.finance/" target="_blank">
+						<a href="https://docs.bao.finance/" target="_blank" rel="noopener noreferrer">
 							docs
-						</ExternalLink>{' '}
+						</a>{' '}
 						before using the farms so you are familiar with protocol risks and
 						fees!
 					</p>

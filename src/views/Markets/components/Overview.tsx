@@ -1,6 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BigNumber from 'bignumber.js'
 import Tooltipped from 'components/Tooltipped'
+import useBao from 'hooks/base/useBao'
 import { useAccountLiquidity } from 'hooks/markets/useAccountLiquidity'
 import useHealthFactor from 'hooks/markets/useHealthFactor'
 import React from 'react'
@@ -11,10 +12,18 @@ import {
 } from 'react-circular-progressbar'
 import 'react-circular-progressbar/dist/styles.css'
 import styled from 'styled-components'
-import { decToBn } from 'utils'
 import { getDisplayBalance } from 'utils/numberFormat'
+import { useWeb3React } from '@web3-react/core'
+import {
+	StatWrapper,
+	UserStat,
+	UserStatsContainer,
+	UserStatsWrapper,
+} from 'components/Stats'
 
 export const Overview = () => {
+	const bao = useBao()
+	const { account } = useWeb3React()
 	const accountLiquidity = useAccountLiquidity()
 	const healthFactor = useHealthFactor()
 
@@ -31,15 +40,16 @@ export const Overview = () => {
 		? accountLiquidity.usdBorrow + accountLiquidity.usdBorrowable
 		: 0
 
-	// TODO: Better health factor color spectrum
 	const healthFactorColor = (healthFactor: BigNumber) =>
-		healthFactor.lte(1.25)
+		healthFactor.eq(0)
+			? `${(props: any) => props.theme.color.text[100]}`
+			: healthFactor.lte(1.25)
 			? '#e32222'
 			: healthFactor.lt(1.55)
 			? '#ffdf19'
 			: '#45be31'
 
-	return accountLiquidity ? (
+	return bao && account && accountLiquidity ? (
 		<>
 			<UserStatsContainer md={3}>
 				<UserStatsWrapper md={5}>
@@ -47,7 +57,11 @@ export const Overview = () => {
 						<UserStat>
 							<h1>Net APY</h1>
 							<p>
-								{`${accountLiquidity ? accountLiquidity.netApy.toFixed(2) : 0}`}
+								{`${
+									bao && account && accountLiquidity
+										? accountLiquidity.netApy.toFixed(2)
+										: 0
+								}`}
 								%
 							</p>
 						</UserStat>
@@ -58,7 +72,7 @@ export const Overview = () => {
 							<p>
 								$
 								{`${
-									accountLiquidity
+									bao && account && accountLiquidity
 										? getDisplayBalance(accountLiquidity.usdSupply, 0, 2)
 										: 0
 								}`}
@@ -74,7 +88,9 @@ export const Overview = () => {
 							strokeWidth={10}
 							styles={buildStyles({
 								strokeLinecap: 'butt',
-								pathColor: '#ce6509',
+								pathColor: `${
+									healthFactor ? healthFactorColor(healthFactor) : '#fff'
+								}`,
 							})}
 						>
 							<div
@@ -88,7 +104,7 @@ export const Overview = () => {
 										<h1>Debt Limit</h1>
 										<p>
 											{`${
-												accountLiquidity.usdBorrowable > 0
+												bao && account && accountLiquidity.usdBorrowable > 0
 													? Math.floor(
 															(accountLiquidity.usdBorrow /
 																(accountLiquidity.usdBorrowable +
@@ -113,7 +129,7 @@ export const Overview = () => {
 							<p>
 								$
 								{`${
-									accountLiquidity
+									bao && account && accountLiquidity
 										? getDisplayBalance(accountLiquidity.usdBorrow, 0, 2)
 										: 0
 								}`}
@@ -123,8 +139,8 @@ export const Overview = () => {
 					<StatWrapper xs={6}>
 						<UserStat>
 							<h1>
-								Health Factor{' '}
-								<Tooltipped content="Your account health factor is calculated as follows: (USD supplied * average collateral factor) / USD borrowed. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
+								Health Factor
+								<Tooltipped content="Your account health factor is calculated as follows: ∑(collateral_usd * collateral_factor) / borrowed_usd. A health factor below 1.0 means you have exceeded your borrow limit and you will be liquidated." />
 							</h1>
 							<p
 								style={{
@@ -133,11 +149,13 @@ export const Overview = () => {
 							>
 								{healthFactor &&
 									(healthFactor.isFinite() ? (
-										healthFactor.isLessThanOrEqualTo(0) ? (
-											<p style={{ color: 'green' }}>-</p>
-										) :
-										healthFactor.gt(10000) ? (
-											'> 10000'
+										healthFactor.lte(0) ? (
+											'-'
+										) : healthFactor.gt(10000) ? (
+											<p>
+												{'>'} 10000 {' '}
+												<Tooltipped content={`Your health factor is ${healthFactor}.`} />
+											</p>
 										) : (
 											healthFactor.toFixed(2)
 										)
@@ -173,7 +191,7 @@ export const Overview = () => {
 									}}
 								>
 									{`${
-										accountLiquidity.usdBorrowable > 0
+										bao && account && accountLiquidity.usdBorrowable > 0
 											? Math.floor(
 													(accountLiquidity.usdBorrow /
 														(accountLiquidity.usdBorrowable +
@@ -190,7 +208,7 @@ export const Overview = () => {
 							</ProgressBarWrapper>
 
 							<BorrowableLabel>
-								<p>${borrowable}</p>
+								<p>${`${getDisplayBalance(borrowable, 0)}`}</p>
 							</BorrowableLabel>
 						</DebtLimit>
 					</DebtLimitWrapper>
@@ -201,67 +219,6 @@ export const Overview = () => {
 		<></>
 	)
 }
-
-export const UserStatsContainer = styled(Row)`
-	position: relative;
-	margin: 0 12px 50px;
-	justify-content: space-evenly;
-`
-
-export const UserStatsWrapper = styled(Col)`
-	align-items: center;
-	display: flex;
-	flex-flow: row wrap;
-	margin-right: -0.665rem;
-	margin-left: -0.665rem;
-	justify-content: space-evenly;
-`
-
-export const StatWrapper = styled(Col)`
-	background-color: ${(props) => props.theme.color.primary[100]};
-	margin: 0.5rem 0.5rem;
-	border-radius: 8px;
-	position: relative;
-	flex: 1 1 0%;
-	padding-inline-start: 1rem;
-	padding-inline-end: 1rem;
-	padding: 1.25rem 16px;
-	border: ${(props) => props.theme.border.default};
-
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		padding: 1rem 12px;
-		padding-inline-start: 0.75rem;
-		padding-inline-end: 0.75rem;
-	}
-
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		min-width: 120px;
-	}
-`
-
-export const UserStat = styled.div`
-	overflow-wrap: break-word;
-	text-align: center;
-
-	p {
-		font-size: 1.5rem;
-		margin: 0px;
-
-		@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-			font-size: 0.875rem;
-		}
-	}
-
-	h1 {
-		font-size: 0.875rem;
-		color: ${(props) => props.theme.color.text[200]};
-		margin: 0px;
-
-		@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-			font-size: 0.75rem;
-		}
-	}
-`
 
 //Circular Progress Bar
 

@@ -4,7 +4,8 @@ import Config from 'bao/lib/config'
 import { ActiveSupportedMarket } from 'bao/lib/types'
 import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { SubmitButton } from 'components/Button/Button'
+import { ButtonStack, SubmitButton } from 'components/Button/Button'
+import { ExternalLink } from 'components/Link'
 import useBao from 'hooks/base/useBao'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useApprovals } from 'hooks/markets/useApprovals'
@@ -190,13 +191,3 @@ export const MarketButton = ({
 		}
 	}
 }
-
-const ButtonStack = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-`
-
-const ExternalLink = styled.a`
-	color: ${(props) => props.theme.color.text[100]};
-`

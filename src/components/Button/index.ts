@@ -1,2 +1,1 @@
-export { Button, MaxButton, NavButtons, CloseButton } from './Button';
-
+export { Button, MaxButton, NavButtons, CloseButton, ButtonStack, SubmitButton } from './Button';

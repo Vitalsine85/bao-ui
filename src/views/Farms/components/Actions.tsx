@@ -4,13 +4,29 @@ import baoIcon from 'assets/img/logo.svg'
 import Config from 'bao/lib/config'
 import { approvev2, getMasterChefContract, getRefUrl } from 'bao/utils'
 import BigNumber from 'bignumber.js'
-import { SubmitButton } from 'components/Button/Button'
-import ExternalLink from 'components/ExternalLink'
+import {
+	BalanceContent,
+	BalanceImage,
+	BalanceSpacer,
+	BalanceText,
+	BalanceValue,
+	BalanceWrapper,
+} from 'components/Balance'
+import { ButtonStack, SubmitButton } from 'components/Button'
+import { QuestionIcon } from 'components/Icon'
+import {
+	AssetLabel,
+	LabelEnd,
+	LabelStack,
+	LabelStart,
+	MaxLabel,
+} from 'components/Label'
 import { SpinnerLoader } from 'components/Loader'
 import TokenInput from 'components/TokenInput'
 import { PoolType } from 'contexts/Farms/types'
 import { ethers } from 'ethers'
 import useAllowance from 'hooks/base/useAllowance'
+import useApprove from 'hooks/base/useApprove'
 import useBao from 'hooks/base/useBao'
 import useBlockDiff from 'hooks/base/useBlockDiff'
 import useTransactionHandler from 'hooks/base/useTransactionHandler'
@@ -19,8 +35,7 @@ import useFees from 'hooks/farms/useFees'
 import useStakedBalance from 'hooks/farms/useStakedBalance'
 import { useUserFarmInfo } from 'hooks/farms/useUserFarmInfo'
 import { default as React, useCallback, useMemo, useState } from 'react'
-import { Col, Modal, ModalBody, Row } from 'react-bootstrap'
-import styled from 'styled-components'
+import { Col, Modal, Row, Spinner } from 'react-bootstrap'
 import {
 	exponentiate,
 	getDisplayBalance,
@@ -29,121 +44,8 @@ import {
 import { Contract } from 'web3-eth-contract'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
+import { EarningsWrapper, FarmModalBody } from './styles'
 
-interface RewardsProps {
-	pid: number
-}
-
-export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
-	const bao = useBao()
-	const earnings = useEarnings(pid)
-	const { account } = useWeb3React()
-	const { pendingTx, handleTx } = useTransactionHandler()
-	const masterChefContract = getMasterChefContract(bao)
-
-	return (
-		<>
-			<FarmModalBody>
-				<EarningsWrapper>
-					<BalanceContent>
-						<BalanceImage>
-							<img src={baoIcon} />
-						</BalanceImage>
-						<BalanceSpacer />
-						<BalanceText>
-							<BalanceValue>{getDisplayBalance(earnings)}</BalanceValue>
-						</BalanceText>
-					</BalanceContent>
-				</EarningsWrapper>
-			</FarmModalBody>
-			<Modal.Footer>
-				<ButtonStack>
-					<>
-						{pendingTx ? (
-							<SubmitButton disabled={true}>
-								{typeof pendingTx === 'string' ? (
-									<ExternalLink
-										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-										target="_blank"
-									>
-										Pending Transaction{' '}
-										<FontAwesomeIcon icon="external-link-alt" />
-									</ExternalLink>
-								) : (
-									'Pending Transaction'
-								)}
-							</SubmitButton>
-						) : (
-							<SubmitButton
-								disabled={!earnings.toNumber()}
-								onClick={async () => {
-									let harvestTx
-
-									harvestTx = masterChefContract.methods
-										.claimReward(pid)
-										.send({ from: account })
-									handleTx(
-										harvestTx,
-										`Harvest ${getDisplayBalance(earnings)} BAO`,
-									)
-								}}
-							>
-								Harvest BAO
-							</SubmitButton>
-						)}
-					</>
-				</ButtonStack>
-			</Modal.Footer>
-		</>
-	)
-}
-
-const EarningsWrapper = styled.div`
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translateX(-50%) translateY(-50%);
-`
-
-const BalanceContent = styled.div`
-	-webkit-box-align: center;
-	align-items: center;
-	display: flex;
-`
-
-const BalanceImage = styled.div`
-	display: flex;
-	-webkit-box-pack: center;
-	justify-content: center;
-	min-width: 48px;
-	min-height: 48px;
-	border-radius: 40px;
-	background-color: ${(props) => props.theme.color.primary[200]};
-
-	img {
-		height: 34px;
-		text-align: center;
-		min-width: 34px;
-		margin: auto;
-	}
-`
-
-const BalanceSpacer = styled.div`
-	height: 8px;
-	min-height: 8px;
-	min-width: 8px;
-	width: 8px;
-`
-
-const BalanceText = styled.div`
-	display: block;
-	flex: 1 1 0%;
-`
-
-const BalanceValue = styled.div`
-	font-size: 24px;
-	font-weight: 700;
-`
 interface StakeProps {
 	lpContract: Contract
 	lpTokenAddress: string
@@ -151,6 +53,7 @@ interface StakeProps {
 	max: BigNumber
 	tokenName?: string
 	poolType: PoolType
+	ref?: string
 	pairUrl: string
 	onHide?: () => void
 }
@@ -162,6 +65,7 @@ export const Stake: React.FC<StakeProps> = ({
 	poolType,
 	max,
 	tokenName = '',
+	ref = '',
 	pairUrl = '',
 	onHide,
 }) => {
@@ -194,6 +98,8 @@ export const Stake: React.FC<StakeProps> = ({
 		)
 	}, [fullBalance, setVal])
 
+	const [requestedApproval, setRequestedApproval] = useState(false)
+
 	const allowance = useAllowance(lpContract)
 
 	const masterChefContract = getMasterChefContract(bao)
@@ -219,14 +125,14 @@ export const Stake: React.FC<StakeProps> = ({
 								<MaxLabel>Balance:</MaxLabel>
 								<AssetLabel>
 									{fullBalance}{' '}
-									<ExternalLink href={pairUrl}>
+									<a href={pairUrl} target="_blank" rel="noopener noreferrer">
 										{' '}
 										{tokenName}{' '}
 										<FontAwesomeIcon
 											icon="external-link-alt"
 											style={{ height: '.75rem' }}
 										/>
-									</ExternalLink>
+									</a>
 								</AssetLabel>
 							</LabelStack>
 						</LabelEnd>
@@ -251,20 +157,11 @@ export const Stake: React.FC<StakeProps> = ({
 						<>
 							{pendingTx ? (
 								<SubmitButton disabled={true}>
-									{typeof pendingTx === 'string' ? (
-										<ExternalLink
-											href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-											target="_blank"
-										>
-											Pending Transaction{' '}
-											<FontAwesomeIcon icon="external-link-alt" />
-										</ExternalLink>
-									) : (
-										'Pending Transaction'
-									)}
+									Approving {tokenName}
 								</SubmitButton>
 							) : (
 								<SubmitButton
+									disabled={requestedApproval}
 									onClick={async () => {
 										handleTx(
 											approvev2(lpContract, masterChefContract, account),
@@ -283,13 +180,13 @@ export const Stake: React.FC<StakeProps> = ({
 									{pendingTx ? (
 										<SubmitButton disabled={true}>
 											{typeof pendingTx === 'string' ? (
-												<ExternalLink
+												<a
 													href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 													target="_blank"
 												>
 													Pending Transaction{' '}
 													<FontAwesomeIcon icon="external-link-alt" />
-												</ExternalLink>
+												</a>
 											) : (
 												'Pending Transaction'
 											)}
@@ -312,6 +209,7 @@ export const Stake: React.FC<StakeProps> = ({
 														getRefUrl(),
 													)
 													.send({ from: account })
+
 												handleTx(
 													stakeTx,
 													`Deposit ${parseFloat(val).toFixed(4)} ${tokenName}`,
@@ -359,6 +257,7 @@ interface UnstakeProps {
 	max: BigNumber
 	tokenName?: string
 	pid: number
+	ref?: string
 	pairUrl: string
 	lpTokenAddress: string
 	onHide?: () => void
@@ -369,6 +268,7 @@ export const Unstake: React.FC<UnstakeProps> = ({
 	max,
 	tokenName = '',
 	pid = null,
+	ref = '',
 	pairUrl = '',
 	lpTokenAddress = '',
 	onHide,
@@ -443,14 +343,14 @@ export const Unstake: React.FC<UnstakeProps> = ({
 								<MaxLabel>Balance:</MaxLabel>
 								<AssetLabel>
 									{fullBalance}{' '}
-									<ExternalLink href={pairUrl}>
+									<a href={pairUrl} rel="noopener noreferrer">
 										{' '}
 										{tokenName}{' '}
 										<FontAwesomeIcon
 											icon="external-link-alt"
 											style={{ height: '.75rem' }}
 										/>
-									</ExternalLink>
+									</a>
 								</AssetLabel>
 							</LabelStack>
 						</LabelEnd>
@@ -475,13 +375,13 @@ export const Unstake: React.FC<UnstakeProps> = ({
 						{pendingTx ? (
 							<SubmitButton disabled={true}>
 								{typeof pendingTx === 'string' ? (
-									<ExternalLink
+									<a
 										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
 										target="_blank"
 									>
 										Pending Transaction{' '}
 										<FontAwesomeIcon icon="external-link-alt" />
-									</ExternalLink>
+									</a>
 								) : (
 									'Pending Transaction'
 								)}
@@ -510,6 +410,7 @@ export const Unstake: React.FC<UnstakeProps> = ({
 											getRefUrl(),
 										)
 										.send({ from: account })
+
 									handleTx(unstakeTx, `Withdraw ${amount} ${tokenName}`, () =>
 										hideModal(),
 									)
@@ -530,90 +431,71 @@ export const Unstake: React.FC<UnstakeProps> = ({
 	)
 }
 
-export const LabelEnd = styled.div`
-	display: flex;
-	align-items: flex-end;
-	justify-content: flex-end;
-	width: 100%;
+interface RewardsProps {
+	pid: number
+}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		font-size: 0.75rem !important;
-	}
-`
+export const Rewards: React.FC<RewardsProps> = ({ pid }) => {
+	const bao = useBao()
+	const earnings = useEarnings(pid)
+	const { account } = useWeb3React()
+	const { pendingTx, handleTx } = useTransactionHandler()
+	const masterChefContract = getMasterChefContract(bao)
 
-export const LabelStart = styled.div`
-	display: flex;
-	align-items: flex-start;
-	justify-content: flex-start;
-	width: 100%;
+	return (
+		<>
+			<FarmModalBody>
+				<EarningsWrapper>
+					<BalanceContent>
+						<BalanceImage>
+							<img src={baoIcon} />
+						</BalanceImage>
+						<BalanceSpacer />
+						<BalanceText>
+							<BalanceValue>{getDisplayBalance(earnings)}</BalanceValue>
+						</BalanceText>
+					</BalanceContent>
+				</EarningsWrapper>
+			</FarmModalBody>
+			<Modal.Footer>
+				<ButtonStack>
+					<>
+						{pendingTx ? (
+							<SubmitButton disabled={true}>
+								{typeof pendingTx === 'string' ? (
+									<a
+										href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
+										target="_blank"
+									>
+										Pending Transaction{' '}
+										<FontAwesomeIcon icon="external-link-alt" />
+									</a>
+								) : (
+									'Pending Transaction'
+								)}
+							</SubmitButton>
+						) : (
+							<SubmitButton
+								disabled={!earnings.toNumber()}
+								onClick={async () => {
+									let harvestTx
 
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		font-size: 0.75rem !important;
-	}
-`
+									harvestTx = masterChefContract.methods
+										.claimReward(pid)
+										.send({ from: account })
 
-export const FeeLabel = styled.p`
-	color: ${(props) => props.theme.color.text[200]};
-	font-size: 0.875rem;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	margin-bottom: 0px;
-
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		font-size: 0.75rem;
-	}
-`
-
-export const LabelStack = styled.span`
-	display: flex;
-	align-items: flex-end;
-	flex-direction: row;
-`
-
-export const MaxLabel = styled.span`
-	color: ${(props) => props.theme.color.text[200]};
-	font-size: 0.875rem;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	margin-bottom: 0px;
-
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		font-size: 0.75rem;
-	}
-`
-
-export const AssetLabel = styled.span`
-	color: ${(props) => props.theme.color.text[100]};
-	font-size: 0.875rem;
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	margin-inline-start: 0.25rem;
-	margin-bottom: 0px;
-	vertical-align: middle;
-
-	@media (max-width: ${(props) => props.theme.breakpoints.lg}px) {
-		font-size: 0.75rem;
-	}
-`
-
-const ButtonStack = styled.div`
-	display: flex;
-	flex-direction: column;
-	width: 100%;
-`
-
-const BalanceWrapper = styled(Row)`
-	padding: 0.25rem;
-`
-
-const FarmModalBody = styled(ModalBody)`
-	height: 120px;
-`
-
-export const QuestionIcon = styled(FontAwesomeIcon)`
-	color: ${(props) => props.theme.color.text[200]};
-
-	&:hover,
-	&:focus {
-		color: ${(props) => props.theme.color.text[100]};
-		animation: 200ms;
-		cursor: pointer;
-	}
-`
+									handleTx(
+										harvestTx,
+										`Harvest ${getDisplayBalance(earnings)} BAO`,
+									)
+								}}
+							>
+								Harvest BAO
+							</SubmitButton>
+						)}
+					</>
+				</ButtonStack>
+			</Modal.Footer>
+		</>
+	)
+}
