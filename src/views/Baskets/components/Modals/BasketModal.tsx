@@ -222,7 +222,8 @@ const BasketModal: React.FC<ModalProps> = ({
 							>
 								here
 							</a>
-							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may apply on swaps)
+							. (<b style={{ fontWeight: 'bold' }}>CAUTION:</b> Slippage may
+							apply on swaps)
 						</div>
 					)}
 					<ModalStack>
