@@ -4,11 +4,11 @@ import ERC20ABI from 'bao/lib/abi/erc20.json'
 import { Bao } from 'bao'
 
 export const getContract = (bao: Bao, address: string) => {
-  return bao && bao.provider && new bao.provider.Contract(ERC20ABI, address)
+  return bao && bao.web3 && new Contract(address, ERC20ABI)
 }
 
 export const getCreamContract = (bao: Bao, address: string) => {
-  return bao && bao.provider && new bao.provider.Contract(CreamABI, address)
+  return bao && bao.web3 && new Contract(address, CreamABI)
 }
 
 export const getAllowance = async (

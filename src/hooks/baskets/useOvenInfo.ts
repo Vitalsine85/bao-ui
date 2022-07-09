@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import useBao from '../base/useBao'
 import { BigNumber } from 'bignumber.js'
 import Multicall from '../../utils/multicall'
+import { useWeb3React } from '@web3-react/core'
 
 export type OvenInfo = {
   balance: BigNumber
@@ -17,9 +18,10 @@ const useOvenInfo = (
 ): OvenInfo => {
   const [info, setInfo] = useState<OvenInfo | undefined>()
   const bao = useBao()
+  const { library } = useWeb3React()
 
   const fetchOvenInfo = useCallback(async () => {
-    const balance = await bao.provider.getBalance(basket.ovenAddress)
+    const balance = await library.getBalance(basket.ovenAddress)
 
     const query = Multicall.createCallContext([
       {

@@ -34,6 +34,7 @@ import {
 	MaxLabel,
 	ModalStack,
 } from '../../../Markets/components/styles'
+import ERC20ABI from 'bao/lib/abi/erc20.json'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -60,7 +61,7 @@ const BasketModal: React.FC<ModalProps> = ({
 
 	const bao = useBao()
 	const { handleTx, pendingTx } = useTransactionHandler()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const rates = useBasketRates(basket)
 
 	// Get DAI approval
@@ -86,7 +87,7 @@ const BasketModal: React.FC<ModalProps> = ({
 					// If DAI allowance is zero or insufficient, send an Approval TX
 					if (daiAllowance.eq(0) || daiAllowance.lt(exponentiate(value))) {
 						tx = bao
-							.getNewContract('erc20.json', Config.addressMap.DAI)
+							.getNewContract(Config.addressMap.DAI, ERC20ABI, library, account)
 							.methods.approve(
 								recipe.options.address,
 								ethers.constants.MaxUint256, // TODO- give the user a notice that we're approving max uint and instruct them how to change this value.

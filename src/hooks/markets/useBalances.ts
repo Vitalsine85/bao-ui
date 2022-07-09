@@ -7,6 +7,8 @@ import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useWeb3React } from '@web3-react/core'
 import useBlock from 'hooks/base/useBlock'
+import ERC20ABI from 'bao/lib/abi/erc20.json'
+import CTOKENABI from 'bao/lib/abi/ctoken.json'
 
 export type Balance = {
   address: string
@@ -17,7 +19,7 @@ export type Balance = {
 export const useAccountBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account } = useWeb3React()
+  const { library, account } = useWeb3React()
   const block = useBlock()
   const tokens = Config.markets.map(
     (market) => market.underlyingAddresses[Config.networkId],
@@ -29,7 +31,8 @@ export const useAccountBalances = (): Balance[] => {
     const data: Contract[] = tokens
       .map(
         (address) =>
-          address !== 'ETH' && bao.getNewContract('erc20.json', address),
+          address !== 'ETH' &&
+          bao.getNewContract(address, ERC20ABI, library, account),
       )
       .filter((contract) => contract)
 
@@ -51,7 +54,7 @@ export const useAccountBalances = (): Balance[] => {
         ),
       ),
     )
-    const ethBalance = await bao.provider.getBalance(account)
+    const ethBalance = await bao.web3.getBalance(account)
 
     setBalances(
       tokens.map((address) => ({
@@ -81,7 +84,7 @@ export const useAccountBalances = (): Balance[] => {
 export const useSupplyBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account } = useWeb3React()
+  const { library, account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.marketAddresses[Config.networkId],
   )
@@ -90,7 +93,7 @@ export const useSupplyBalances = (): Balance[] => {
 
   const fetchBalances = useCallback(async () => {
     const data: Contract[] = tokens.map((address) =>
-      bao.getNewContract('ctoken.json', address),
+      bao.getNewContract(address, CTOKENABI, library, account),
     )
 
     const multicallResults = MultiCall.parseCallResults(
@@ -134,7 +137,7 @@ export const useSupplyBalances = (): Balance[] => {
 export const useBorrowBalances = (): Balance[] => {
   const { transactions } = useTransactionProvider()
   const bao = useBao()
-  const { account } = useWeb3React()
+  const { library, account } = useWeb3React()
   const tokens = Config.markets.map(
     (market) => market.marketAddresses[Config.networkId],
   )
@@ -143,7 +146,7 @@ export const useBorrowBalances = (): Balance[] => {
 
   const fetchBalances = useCallback(async () => {
     const data: Contract[] = tokens.map((address) =>
-      bao.getNewContract('ctoken.json', address),
+      bao.getNewContract(address, CTOKENABI, library, account),
     )
 
     const multicallResults = MultiCall.parseCallResults(

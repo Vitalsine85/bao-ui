@@ -3,13 +3,21 @@ import { useCallback, useEffect, useState } from 'react'
 import { BigNumber } from 'bignumber.js'
 import useBao from '../base/useBao'
 import { getWethPriceLink } from '../../bao/utils'
+import { useWeb3React } from '@web3-react/core'
+import UNILPABI from 'bao/lib/abi/uni_v2_lp.json'
 
 const usePairPrice = (basket: ActiveSupportedBasket) => {
   const [price, setPrice] = useState<BigNumber | undefined>()
   const bao = useBao()
+  const { library, account } = useWeb3React()
 
   const fetchPairPrice = useCallback(async () => {
-    const lpContract = bao.getNewContract('uni_v2_lp.json', basket.lpAddress)
+    const lpContract = bao.getNewContract(
+      basket.lpAddress,
+      UNILPABI,
+      library,
+      account,
+    )
 
     const wethPrice = await getWethPriceLink(bao)
     const reserves = await lpContract.methods.getReserves().call()

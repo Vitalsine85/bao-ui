@@ -1,4 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useWeb3React } from '@web3-react/core'
 import baoUSDIcon from 'assets/img/assets/bUSD.png'
 import daiIcon from 'assets/img/assets/DAI.png'
 import Config from 'bao/lib/config'
@@ -17,9 +18,11 @@ import Multicall from 'utils/multicall'
 import { decimate, getDisplayBalance } from 'utils/numberFormat'
 import { AssetStack } from 'views/Markets/components/styles'
 import BallastButton from './BallastButton'
+import ERC20ABI from 'bao/lib/abi/erc20.json'
 
 const BallastSwapper: React.FC = () => {
 	const bao = useBao()
+	const { library, account } = useWeb3React()
 	const { transactions } = useTransactionProvider()
 	const [swapDirection, setSwapDirection] = useState(false) // false = DAI->baoUSD | true = baoUSD->DAI
 	const [inputVal, setInputVal] = useState('')
@@ -47,7 +50,12 @@ const BallastSwapper: React.FC = () => {
 			},
 			{
 				ref: 'DAI',
-				contract: bao.getNewContract('erc20.json', Config.addressMap.DAI),
+				contract: bao.getNewContract(
+					Config.addressMap.DAI,
+					ERC20ABI,
+					library,
+					account,
+				),
 				calls: [
 					{ method: 'balanceOf', params: [ballastContract.options.address] },
 				],

@@ -50,7 +50,7 @@ const TransactionsProvider: React.FC<
 			for (const key of Object.keys(txs)) {
 				const tx = txs[key]
 				if (!tx.receipt) {
-					const receipt = await bao.provider.getTransactionReceipt(tx.hash)
+					const receipt = await bao.web3.getTransactionReceipt(tx.hash)
 					if (receipt !== null) handleTxReceipt(receipt)
 				}
 			}

@@ -6,6 +6,9 @@ import MultiCall from 'utils/multicall'
 import { ActiveSupportedBasket } from '../../bao/lib/types'
 import { decimate } from '../../utils/numberFormat'
 import { fetchSushiApy } from './strategies/useSushiBarApy'
+import { useWeb3React } from '@web3-react/core'
+import ERC20ABI from 'bao/lib/abi/erc20.json'
+import LLKASHIABI from 'bao/lib/abi/lendingLogicKashi.json'
 
 export type BasketComponent = {
   address: string
@@ -31,6 +34,7 @@ const useComposition = (
   >()
   const prices = useGeckoPrices()
   const bao = useBao()
+  const { library, account } = useWeb3React()
 
   const fetchComposition = useCallback(async () => {
     const tokenComposition: string[] = await basket.basketContract.methods
@@ -46,7 +50,7 @@ const useComposition = (
             '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2', // Filter MKR because its symbol/name is a bytes32 object >_>
         )
         .map((address) => ({
-          contract: bao.getNewContract('erc20.json', address),
+          contract: bao.getNewContract(address, ERC20ABI, library, account),
           ref: address,
           calls: [
             { method: 'decimals' },
@@ -79,8 +83,10 @@ const useComposition = (
             balance: new BigNumber(
               await bao
                 .getNewContract(
-                  'erc20.json',
                   '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
+                  ERC20ABI,
+                  library,
+                  account,
                 )
                 .methods.balanceOf(basket.address)
                 .call(),
@@ -116,8 +122,10 @@ const useComposition = (
           .protocolToLogic(lendingRes[1].values[0])
           .call()
         const logicContract = bao.getNewContract(
-          'lendingLogicKashi.json',
           logicAddress,
+          LLKASHIABI,
+          library,
+          account,
         )
         const exchangeRate = await logicContract.methods
           .exchangeRate(_c.address)
@@ -132,7 +140,7 @@ const useComposition = (
                   .call(),
               )
         const underlyingDecimals = await bao
-          .getNewContract('erc20.json', lendingRes[0].values[0])
+          .getNewContract(lendingRes[0].values[0], ERC20ABI, library, account)
           .methods.decimals()
           .call()
 

@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
+import ERC20ABI from 'bao/lib/abi/erc20.json'
 import Config from 'bao/lib/config'
 import { approvev2 } from 'bao/utils'
 import BigNumber from 'bignumber.js'
@@ -19,7 +20,7 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 	reserves,
 }: BallastButtonProps) => {
 	const bao = useBao()
-	const { account } = useWeb3React()
+	const { library, account } = useWeb3React()
 	const { pendingTx, handleTx } = useTransactionHandler()
 
 	const inputAApproval = useAllowancev2(
@@ -39,8 +40,10 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			// BaoUSD->DAI
 			if (!inputBApproval.gt(0)) {
 				const tokenContract = bao.getNewContract(
-					'erc20.json',
-					Config.addressMap.baoUSD,
+					Config.addressMap.DAI,
+					ERC20ABI,
+					library,
+					account,
 				)
 				return handleTx(
 					approvev2(tokenContract, ballastContract, account),
@@ -58,8 +61,10 @@ const BallastButton: React.FC<BallastButtonProps> = ({
 			// DAI->baoUSD
 			if (!inputAApproval.gt(0)) {
 				const tokenContract = bao.getNewContract(
-					'erc20.json',
 					Config.addressMap.DAI,
+					ERC20ABI,
+					library,
+					account,
 				)
 				return handleTx(
 					approvev2(tokenContract, ballastContract, account),

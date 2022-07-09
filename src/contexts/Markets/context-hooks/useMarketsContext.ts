@@ -6,6 +6,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { decimate } from 'utils/numberFormat'
 import { Contract } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
+import CETHERABI from 'bao/lib/abi/cether.json'
+import CTOKENABI from 'bao/lib/abi/ctoken.json'
 
 export const SECONDS_PER_BLOCK = 2
 export const SECONDS_PER_DAY = 24 * 60 * 60
@@ -18,7 +20,7 @@ const toApy = (rate: number) =>
 
 export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
   const bao = useBao()
-  const { library } = useWeb3React()
+  const { library, account } = useWeb3React()
   const { transactions } = useTransactionProvider()
   const [markets, setMarkets] = useState<ActiveSupportedMarket[] | undefined>()
 
@@ -26,8 +28,10 @@ export const useMarketsContext = (): ActiveSupportedMarket[] | undefined => {
     const contracts: Contract[] = bao.contracts.markets.map(
       (market: ActiveSupportedMarket) => {
         return bao.getNewContract(
-          market.underlyingAddress === 'ETH' ? 'cether.json' : 'ctoken.json',
           market.marketAddress,
+          market.underlyingAddress === 'ETH' ? CETHERABI : CTOKENABI,
+          library,
+          account,
         )
       },
     )

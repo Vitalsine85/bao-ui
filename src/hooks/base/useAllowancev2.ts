@@ -4,17 +4,23 @@ import { useCallback, useEffect, useState } from 'react'
 import { getAllowance } from 'utils/erc20'
 import useBao from './useBao'
 import useTransactionProvider from './useTransactionProvider'
+import ERC20ABI from 'bao/lib/abi/erc20.json'
 
 const useAllowancev2 = (tokenAddress: string, spenderAddress: string) => {
-  const { account } = useWeb3React()
   const bao = useBao()
+  const { library, account } = useWeb3React()
   const { transactions } = useTransactionProvider()
 
   const [allowance, setAllowance] = useState<BigNumber | undefined>()
 
   const _getAllowance: any = useCallback(async () => {
     try {
-      const tokenContract = bao.getNewContract('erc20.json', tokenAddress)
+      const tokenContract = bao.getNewContract(
+        tokenAddress,
+        ERC20ABI,
+        library,
+        account,
+      )
       const _allowance = await getAllowance(
         tokenContract,
         account,

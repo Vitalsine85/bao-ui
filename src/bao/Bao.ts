@@ -25,16 +25,14 @@ export class Bao {
   operation: SetsNetworkId
 
   constructor(provider: Web3Provider, networkId: number, options: BaoOptions) {
-    const { chainId, library } = useWeb3React()
-
-    this.networkId = chainId
-    this.web3 = library
+    this.networkId = networkId
+    this.web3 = provider
     this.multicall = new MC({
-      web3Instance: this.web3,
+      ethersProvider: this.web3,
       tryAggregate: true,
     })
 
-    this.contracts = new Contracts(provider, chainId, options)
+    this.contracts = new Contracts(provider, networkId, options)
   }
 
   // account is not optional
