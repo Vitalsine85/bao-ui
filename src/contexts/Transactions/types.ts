@@ -1,4 +1,4 @@
-import { TransactionReceipt } from 'web3-core'
+import { TransactionReceipt } from '@ethersproject/providers'
 
 export interface Transaction {
   description: string

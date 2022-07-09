@@ -9,7 +9,6 @@ import BigNumber from 'bignumber.js'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { getContract } from 'utils/erc20'
-import { provider } from 'web3-core'
 import useBao from '../base/useBao'
 
 export interface StakedValue {
@@ -22,7 +21,7 @@ export interface StakedValue {
 
 const useAllStakedValue = (): StakedValue[] => {
   const [balances, setBalance] = useState([] as Array<StakedValue>)
-  const { account } = useWeb3React<provider>()
+  const { account } = useWeb3React()
   const bao = useBao()
   const farms = getFarms(bao)
   const masterChefContract = getMasterChefContract(bao)

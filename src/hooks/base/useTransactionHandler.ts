@@ -1,5 +1,5 @@
+import { TransactionReceipt } from '@ethersproject/providers'
 import { useState } from 'react'
-import { TransactionReceipt } from 'web3-core'
 import useTransactionProvider from './useTransactionProvider'
 
 const useTransactionHandler = () => {
@@ -32,7 +32,7 @@ const useTransactionHandler = () => {
         handleReceipt(receipt)
         if (cb) cb()
         setTxSuccess(false)
-        if (receipt.status === true) {
+        if (receipt.status === 1) {
           setTxSuccess(true)
         }
         return txSuccess

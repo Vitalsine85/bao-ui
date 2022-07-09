@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
-import { ethers } from 'ethers'
+import { Contract, ethers } from 'ethers'
 import _ from 'lodash'
-import { Contract } from 'web3-eth-contract'
 import { Farm } from 'contexts/Farms'
 import Multicall from 'utils/multicall'
 import { decimate, exponentiate } from 'utils/numberFormat'

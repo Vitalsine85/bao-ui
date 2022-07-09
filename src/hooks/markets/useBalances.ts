@@ -2,7 +2,7 @@ import Config from 'bao/lib/config'
 import { useCallback, useEffect, useState } from 'react'
 import MultiCall from 'utils/multicall'
 import { decimate } from 'utils/numberFormat'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 import useBao from '../base/useBao'
 import useTransactionProvider from '../base/useTransactionProvider'
 import { useWeb3React } from '@web3-react/core'
@@ -51,7 +51,7 @@ export const useAccountBalances = (): Balance[] => {
         ),
       ),
     )
-    const ethBalance = await bao.web3.eth.getBalance(account)
+    const ethBalance = await bao.provider.getBalance(account)
 
     setBalances(
       tokens.map((address) => ({

@@ -40,9 +40,9 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	useEffect(() => {
 		if (!(bao && account)) return
 
-		bao.web3.eth
+		bao.provider
 			.getBalance(account)
-			.then((balance) => setEthBalance(decimate(balance)))
+			.then((balance: any) => setEthBalance(decimate(balance)))
 	}, [bao, account])
 
 	return basket ? (

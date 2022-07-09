@@ -1,7 +1,7 @@
 import { redeem } from 'bao/utils'
 import { useCallback } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 
 const useRedeem = (masterChefContract: Contract) => {
   const { account } = useWeb3React()

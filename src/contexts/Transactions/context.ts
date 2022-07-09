@@ -1,5 +1,5 @@
+import { TransactionReceipt } from '@ethersproject/providers'
 import { createContext } from 'react'
-import { TransactionReceipt } from 'web3-core'
 import { Transaction, TransactionsMap } from './types'
 
 interface TransactionsContext {

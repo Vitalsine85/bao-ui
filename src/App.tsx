@@ -8,8 +8,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
 import Market from 'views/Markets/Market'
-import Web3 from 'web3'
-import { provider } from 'web3-core'
 import MobileMenu from './components/MobileMenu'
 import TopBar from './components/TopBar'
 import BaoProvider from './contexts/BaoProvider'
@@ -32,11 +30,15 @@ import { fas } from '@fortawesome/free-solid-svg-icons'
 
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
+import { ethers } from 'ethers'
+import { Web3Provider } from '@ethersproject/providers'
 
 library.add(fas, fab)
 
-function getLibrary(provider: provider) {
-	return new Web3(provider)
+function getLibrary(provider: any) {
+	const library = new Web3Provider(provider)
+	library.pollingInterval = 12000
+	return library
 }
 
 const Web3ReactNetworkProvider = createWeb3ReactRoot('network')

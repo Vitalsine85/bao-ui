@@ -8,7 +8,6 @@ import { useCallback, useEffect, useState } from 'react'
 import GraphUtil from 'utils/graph'
 import Multicall from 'utils/multicall'
 import { decimate } from 'utils/numberFormat'
-import { AbiItem } from 'web3-utils'
 
 export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
   const results = Multicall.parseCallResults(
@@ -18,8 +17,8 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
           farm.pid === 14 || farm.pid === 23 // single asset farms (TODO: make single asset a config field)
             ? ({
                 ref: farm.lpAddresses[Config.networkId],
-                contract: new bao.web3.eth.Contract(
-                  erc20Abi as AbiItem[],
+                contract: new bao.provider.Contract(
+                  erc20Abi,
                   farm.lpAddresses[Config.networkId],
                 ),
                 calls: [
@@ -34,8 +33,8 @@ export const fetchLPInfo = async (farms: any[], multicall: MC, bao: Bao) => {
               } as any)
             : ({
                 ref: farm.lpAddresses[Config.networkId],
-                contract: new bao.web3.eth.Contract(
-                  lpAbi as AbiItem[],
+                contract: new bao.provider.Contract(
+                  lpAbi,
                   farm.lpAddresses[Config.networkId],
                 ),
                 calls: [

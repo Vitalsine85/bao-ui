@@ -19,7 +19,7 @@ const useOvenInfo = (
   const bao = useBao()
 
   const fetchOvenInfo = useCallback(async () => {
-    const balance = await bao.web3.eth.getBalance(basket.ovenAddress)
+    const balance = await bao.provider.getBalance(basket.ovenAddress)
 
     const query = Multicall.createCallContext([
       {

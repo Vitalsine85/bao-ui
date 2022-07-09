@@ -4,7 +4,7 @@ import useBao from 'hooks/base/useBao'
 import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import { useCallback, useEffect, useState } from 'react'
 import { decimate } from 'utils/numberFormat'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 import { useWeb3React } from '@web3-react/core'
 
 export const SECONDS_PER_BLOCK = 2

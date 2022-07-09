@@ -1,4 +1,4 @@
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 
 export interface SupportedPool {
   pid: number
@@ -136,4 +136,11 @@ export interface Config {
 export type SWR = {
   isLoading?: boolean
   isError?: any
+}
+
+export const ConfirmationType = {
+  Hash: 0,
+  Confirmed: 1,
+  Both: 2,
+  Simulate: 3,
 }

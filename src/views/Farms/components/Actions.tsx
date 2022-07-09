@@ -40,7 +40,7 @@ import {
 	getDisplayBalance,
 	getFullDisplayBalance,
 } from 'utils/numberFormat'
-import { Contract } from 'web3-eth-contract'
+import { Contract } from 'ethers'
 import { FarmWithStakedValue } from './FarmList'
 import { FeeModal } from './Modals'
 import { EarningsWrapper, FarmModalBody } from './styles'

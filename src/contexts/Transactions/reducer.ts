@@ -1,4 +1,4 @@
-import { TransactionReceipt } from 'web3-core'
+import { TransactionReceipt } from '@ethersproject/providers'
 import { Transaction, TransactionsMap } from './types'
 
 const ADD_TRANSACTION = 'ADD_TRANSACTION'
