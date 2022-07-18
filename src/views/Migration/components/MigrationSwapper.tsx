@@ -4,10 +4,7 @@ import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
 import { IconFlex } from 'components/Icon'
 import { BalanceInput } from 'components/Input'
-import Tooltipped from 'components/Tooltipped'
-import useBao from 'hooks/base/useBao'
 import useTokenBalance from 'hooks/base/useTokenBalance'
-import useTransactionProvider from 'hooks/base/useTransactionProvider'
 import React, { useState } from 'react'
 import { Badge, Card } from 'react-bootstrap'
 import styled from 'styled-components'
@@ -16,14 +13,12 @@ import { AssetStack } from 'views/Markets/components/styles'
 import MigrationButton from './MigrationButton'
 
 const MigrationSwapper: React.FC = () => {
-	const bao = useBao()
-	const { transactions } = useTransactionProvider()
 	const [inputVal, setInputVal] = useState('')
 
 	const baov1Balance = useTokenBalance(Config.addressMap.BAO)
 
-	const baov1Input = (
-		<>
+	return (
+		<BallastSwapCard>
 			<BallastLabel>
 				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
 				{getDisplayBalance(baov1Balance).toString()} BAOv1
@@ -42,11 +37,11 @@ const MigrationSwapper: React.FC = () => {
 					</AssetStack>
 				}
 			/>
-		</>
-	)
-
-	const baov2Output = (
-		<>
+			<SwapDirection>
+				<SwapDirectionBadge pill>
+					<FontAwesomeIcon icon="sync" />
+				</SwapDirectionBadge>
+			</SwapDirection>
 			<BalanceInput
 				onMaxClick={null}
 				onChange={(e: {
@@ -61,19 +56,7 @@ const MigrationSwapper: React.FC = () => {
 						</IconFlex>
 					</AssetStack>
 				}
-			/>
-		</>
-	)
-
-	return (
-		<BallastSwapCard>
-			{baov1Input}
-			<SwapDirection>
-				<SwapDirectionBadge pill>
-					<FontAwesomeIcon icon="sync" />
-				</SwapDirectionBadge>
-			</SwapDirection>
-			{baov2Output}
+			/>{' '}
 			<br />
 			<MigrationButton inputVal={inputVal} maxValue={decimate(baov1Balance)} />
 		</BallastSwapCard>
