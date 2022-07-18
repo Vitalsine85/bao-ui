@@ -1,11 +1,11 @@
-import Page from "components/Page"
-import PageHeader from "components/PageHeader"
-import Spacer from "components/Spacer"
-import { Container } from "react-bootstrap"
-import { StyledInfo } from "views/NFT/components/styles"
+import Page from 'components/Page'
+import PageHeader from 'components/PageHeader'
+import Spacer from 'components/Spacer'
+import React from 'react'
+import { Container } from 'react-bootstrap'
+import { StyledInfo } from 'views/NFT/components/styles'
 
 const Migration: React.FC = () => {
-
 	return (
 		<Page>
 			<PageHeader

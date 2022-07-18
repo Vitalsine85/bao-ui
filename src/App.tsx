@@ -1,13 +1,22 @@
+// FontAwesome
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { fab } from '@fortawesome/free-brands-svg-icons'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import fetcher from 'bao/lib/fetcher'
+// Bootstrap
+import 'bootstrap/dist/css/bootstrap.min.css'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
-import React, { useCallback, useEffect, useState } from 'react'
-import { ReactNode } from 'react'
+import React, { ReactNode, useCallback, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
+import Baskets from 'views/Baskets'
+import Basket from 'views/Baskets/Basket'
 import Market from 'views/Markets/Market'
+import Migration from 'views/Migration'
+import VEBAO from 'views/veBAO'
 import Web3 from 'web3'
 import { provider } from 'web3-core'
 import MobileMenu from './components/MobileMenu'
@@ -22,16 +31,6 @@ import Ballast from './views/Ballast'
 import Farms from './views/Farms'
 import Markets from './views/Markets'
 import NFT from './views/NFT'
-import Baskets from 'views/Baskets'
-import Basket from 'views/Baskets/Basket'
-
-// FontAwesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { fab } from '@fortawesome/free-brands-svg-icons'
-import { fas } from '@fortawesome/free-solid-svg-icons'
-
-// Bootstrap
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 library.add(fas, fab)
 
@@ -82,7 +81,9 @@ const App: React.FC = () => {
 					<Route path="/farms" element={<Farms />} />
 					<Route path="/baskets" element={<Baskets />} />
 					<Route path="/baskets/:basketId" element={<Basket />} />
-					<Route path="/NFT" element={<NFT />} />
+					<Route path="/nft" element={<NFT />} />
+					<Route path="/migration" element={<Migration />} />
+					<Route path="/vebao" element={<VEBAO />} />
 				</Routes>
 			</Router>
 		</Providers>
