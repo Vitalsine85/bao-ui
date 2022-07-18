@@ -4,6 +4,7 @@ import Spacer from 'components/Spacer'
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import { StyledInfo } from 'views/NFT/components/styles'
+import MigrationSwapper from './components/MigrationSwapper'
 
 const Migration: React.FC = () => {
 	return (
@@ -27,6 +28,7 @@ const Migration: React.FC = () => {
 					</div>
 				</StyledInfo>
 				<Spacer size="md" />
+				<MigrationSwapper />
 			</Container>
 		</Page>
 	)
