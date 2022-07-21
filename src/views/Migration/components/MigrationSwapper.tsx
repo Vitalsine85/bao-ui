@@ -48,7 +48,7 @@ const MigrationSwapper: React.FC = () => {
 					currentTarget: { value: React.SetStateAction<string> }
 				}) => setInputVal(e.currentTarget.value)}
 				disabled={true}
-				value={new BigNumber(inputVal).times(0.001).toString()}
+				value={inputVal && new BigNumber(inputVal).times(0.001).toString()}
 				label={
 					<AssetStack>
 						<IconFlex>

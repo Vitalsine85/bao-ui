@@ -6,6 +6,8 @@ import { createWeb3ReactRoot, Web3ReactProvider } from '@web3-react/core'
 import fetcher from 'bao/lib/fetcher'
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'react-datepicker/dist/react-datepicker-cssmodules.min.css'
+import 'react-datepicker/dist/react-datepicker.css'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
 import React, { ReactNode, useCallback, useEffect, useState } from 'react'

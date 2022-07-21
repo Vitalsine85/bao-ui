@@ -300,6 +300,55 @@ svg.menuIcon {
 .table {
   margin-bottom: 0px;
 }
+
+.nav{
+  --bs-nav-link-padding-x: 1rem;
+  --bs-nav-link-padding-y: 0.5rem;
+  --bs-nav-link-font-weight: ;
+  --bs-nav-link-color: ${(props) => props.theme.color.text[200]};
+  --bs-nav-link-hover-color: ${(props) => props.theme.color.text[100]};
+  --bs-nav-link-disabled-color: #6c757d;
+}
+
+.nav-tabs {
+border-bottom: none;
+}
+
+.nav-item {
+}
+
+.nav-pills {
+  --bs-nav-pills-border-radius: 0.375rem;
+  --bs-nav-pills-link-active-color: #fff;
+  --bs-nav-pills-link-active-bg: ${(props) => props.theme.color.primary[300]};
+}
+
+.react-datepicker-wrapper {
+  width: auto;
+  height: 50px;
+  outline: none !important;
+}
+
+.input-group-text {
+  color: ${(props) => props.theme.color.text[100]};
+  background: ${(props) => props.theme.color.primary[200]};
+  border: none;
+  border-right: 1px ${(props) => props.theme.color.primary[100]};
+}
+
+.react-date-picker__inputGroup__divider {
+  font-size: 0;
+}
+
+.react-date-picker__inputGroup__divider:before {
+  content: '/';
+  font-size: 1rem;
+}
+
+.react-date-picker__inputGroup__input {
+  color: ${(props) => props.theme.color.text[100]};
+  font-size: 1rem;
+}
 `
 
 export default GlobalStyle
