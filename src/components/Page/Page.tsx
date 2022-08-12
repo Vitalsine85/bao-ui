@@ -8,38 +8,12 @@ interface PageProps {
 }
 
 const Page: React.FC<PropsWithChildren<PageProps>> = ({ children }) => (
-	<StyledPageContainer>
-		<StyledPageWrapper>
-			<StyledMain>{children}</StyledMain>
+	<div className='table max-w-7xl mx-auto sm:px-6 lg:px-8 h-[calc(100vh-7px)] top-18 absolute'>
+		<div className='table-cell align-middle min-h-[calc(100vh-72px)] bg-cover bg-no-repeat top-0 left-0'>
+			<div className='items-center flex flex-col m-h-[calc(100vh-240px)'>{children}</div>
 			<Footer />
-		</StyledPageWrapper>
-	</StyledPageContainer>
+		</div>
+	</div>
 )
-
-const StyledPageContainer = styled.div`
-	display: table;
-	position: absolute;
-	top: ${props => props.theme.topBarSize}px;
-	left: 0;
-	height: calc(100vh - ${props => props.theme.topBarSize}px);
-	width: 100%; ;
-`
-
-const StyledPageWrapper = styled.div`
-	display: table-cell;
-	vertical-align: middle;
-	min-height: calc(100vh - ${props => props.theme.topBarSize}px);
-	background-size: cover;
-	background-repeat: no-repeat;
-	top: 0;
-	left: 0;
-`
-
-const StyledMain = styled.div`
-	align-items: center;
-	display: flex;
-	flex-direction: column;
-	min-height: calc(100vh - 240px);
-`
 
 export default Page
