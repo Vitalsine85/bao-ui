@@ -9,11 +9,7 @@ import MigrationSwapper from './components/MigrationSwapper'
 const Migration: React.FC = () => {
 	return (
 		<Page>
-			<PageHeader
-				icon=""
-				title="Migration"
-				subtitle="Migrate your BAOv1 to BAOv2!"
-			/>
+			<PageHeader icon='' title='Migration' subtitle='Migrate your BAOv1 to BAOv2!' />
 			<Container>
 				<StyledInfo>
 					<div
@@ -27,7 +23,7 @@ const Migration: React.FC = () => {
 						Migrate your BAOv1 to BAOv2!
 					</div>
 				</StyledInfo>
-				<Spacer size="md" />
+				<Spacer size='md' />
 				<MigrationSwapper />
 			</Container>
 		</Page>

@@ -11,7 +11,7 @@ import Vote from './components/Vote'
 const veBAO: React.FC = () => {
 	return (
 		<Page>
-			<PageHeader icon="" title="veBAO" subtitle="Lock your BAO for veBAO!" />
+			<PageHeader icon='' title='veBAO' subtitle='Lock your BAO for veBAO!' />
 			<Container>
 				<StyledInfo>
 					<div
@@ -25,27 +25,23 @@ const veBAO: React.FC = () => {
 						Lock your BAO for veBAO!
 					</div>
 				</StyledInfo>
-				<Spacer size="md" />
-				<Tab.Container defaultActiveKey="lock">
+				<Spacer size='md' />
+				<Tab.Container defaultActiveKey='lock'>
 					<Row>
 						<Col>
-							<Nav
-								variant="pills"
-								className="justify-content-center"
-								activeKey="lock"
-							>
+							<Nav variant='pills' className='justify-content-center' activeKey='lock'>
 								<Nav.Item>
-									<Nav.Link eventKey="lock" href="#">
+									<Nav.Link eventKey='lock' href='#'>
 										Lock
 									</Nav.Link>
 								</Nav.Item>
 								<Nav.Item>
-									<Nav.Link eventKey="vote" href="#">
+									<Nav.Link eventKey='vote' href='#'>
 										Vote
 									</Nav.Link>
 								</Nav.Item>
 								<Nav.Item>
-									<Nav.Link eventKey="gauges" href="#">
+									<Nav.Link eventKey='gauges' href='#'>
 										Gauges
 									</Nav.Link>
 								</Nav.Item>
@@ -55,13 +51,13 @@ const veBAO: React.FC = () => {
 					<Row>
 						<Col>
 							<Tab.Content>
-								<Tab.Pane eventKey="lock">
+								<Tab.Pane eventKey='lock'>
 									<Lock />
 								</Tab.Pane>
-								<Tab.Pane eventKey="vote">
+								<Tab.Pane eventKey='vote'>
 									<Vote />
 								</Tab.Pane>
-								<Tab.Pane eventKey="gauges">
+								<Tab.Pane eventKey='gauges'>
 									<Gauges />
 								</Tab.Pane>
 							</Tab.Content>

@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import baoIcon from 'assets/img/logo.svg'
+import baoIcon from 'assets/img/tokens/BAO.png'
 import Config from 'bao/lib/config'
 import { StatBadge } from 'components/Badge'
 import { IconFlex } from 'components/Icon'
@@ -27,8 +27,8 @@ const Lock: React.FC = () => {
 					<StatCard>
 						<span>BAO Balance</span>
 						<Spacer size={'sm'} />
-						<StatBadge bg="secondary">
-							<img src={baoIcon} alt="BAO" width="24px" /> 10,000,000
+						<StatBadge bg='secondary'>
+							<img src={baoIcon} alt='BAO' width='24px' /> 10,000,000
 						</StatBadge>
 					</StatCard>
 				</Col>
@@ -36,9 +36,8 @@ const Lock: React.FC = () => {
 					<StatCard>
 						<span>Locked (until 7/21/2024)</span>
 						<Spacer size={'sm'} />
-						<StatBadge bg="secondary">
-							100,000 <img src={baoIcon} alt="BAO" width="24px" /> = 100,000
-							veBAO
+						<StatBadge bg='secondary'>
+							100,000 <img src={baoIcon} alt='BAO' width='24px' /> = 100,000 veBAO
 						</StatBadge>
 					</StatCard>
 				</Col>
@@ -46,9 +45,8 @@ const Lock: React.FC = () => {
 					<StatCard>
 						<span>Total Locked</span>
 						<Spacer size={'sm'} />
-						<StatBadge bg="secondary">
-							600,000,000 <img src={baoIcon} alt="BAO" width="24px" /> = 60% =
-							$6,000,000
+						<StatBadge bg='secondary'>
+							600,000,000 <img src={baoIcon} alt='BAO' width='24px' /> = 60% = $6,000,000
 						</StatBadge>
 					</StatCard>
 				</Col>
@@ -57,18 +55,14 @@ const Lock: React.FC = () => {
 				<Card.Header>Lock BAO for veBAO</Card.Header>
 				<Card.Body>
 					<Card.Text>
-						Lock your BAO for veBAO to participate in protocol governance, earn
-						a share of protocol revenue, and boost your yields from providing
-						liquidity. Your veBAO balance is determined by how much BAO you lock
-						and for how long.
+						Lock your BAO for veBAO to participate in protocol governance, earn a share of protocol revenue, and boost your yields from
+						providing liquidity. Your veBAO balance is determined by how much BAO you lock and for how long.
 					</Card.Text>
 					<Row>
 						<Col>
 							<BalanceInput
 								onMaxClick={() => setInputVal(decimate(baoBalance).toString())}
-								onChange={(e: {
-									currentTarget: { value: React.SetStateAction<string> }
-								}) => setInputVal(e.currentTarget.value)}
+								onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 								value={inputVal}
 								label={
 									<AssetStack>
@@ -82,13 +76,13 @@ const Lock: React.FC = () => {
 						<Col>
 							<InputGroup>
 								<InputGroup.Text>
-									<FontAwesomeIcon icon="calendar" />
+									<FontAwesomeIcon icon='calendar' />
 								</InputGroup.Text>
 								<LockDatePicker
 									onChange={(date: Date) => setEndDate(date)}
 									minDate={new Date()}
 									maxDate={addYears(new Date(), 4)}
-									format="MM-dd-y"
+									format='MM-dd-y'
 									value={endDate}
 									calendarIcon={null}
 									clearIcon={null}
@@ -110,9 +104,9 @@ const LockDatePicker = styled(DatePicker)`
 	width: auto;
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;
-	background: ${(props) => props.theme.color.primary[300]};
+	background: ${props => props.theme.color.primary[300]};
 	border: none;
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 	outline: none;
 	padding-left: 1rem;
 `

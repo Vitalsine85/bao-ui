@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import baoIcon from 'assets/img/assets/BAO.png'
+import baoIcon from 'assets/img/tokens/BAO.png'
 import Config from 'bao/lib/config'
 import BigNumber from 'bignumber.js'
 import { IconFlex } from 'components/Icon'
@@ -20,14 +20,11 @@ const MigrationSwapper: React.FC = () => {
 	return (
 		<BallastSwapCard>
 			<BallastLabel>
-				<FontAwesomeIcon icon="long-arrow-alt-right" /> Balance:{' '}
-				{getDisplayBalance(baov1Balance).toString()} BAOv1
+				<FontAwesomeIcon icon='long-arrow-alt-right' /> Balance: {getDisplayBalance(baov1Balance).toString()} BAOv1
 			</BallastLabel>
 			<BalanceInput
 				onMaxClick={() => setInputVal(decimate(baov1Balance).toString())}
-				onChange={(e: {
-					currentTarget: { value: React.SetStateAction<string> }
-				}) => setInputVal(e.currentTarget.value)}
+				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				value={inputVal}
 				label={
 					<AssetStack>
@@ -39,14 +36,12 @@ const MigrationSwapper: React.FC = () => {
 			/>
 			<SwapDirection>
 				<SwapDirectionBadge pill>
-					<FontAwesomeIcon icon="sync" />
+					<FontAwesomeIcon icon='sync' />
 				</SwapDirectionBadge>
 			</SwapDirection>
 			<BalanceInput
 				onMaxClick={null}
-				onChange={(e: {
-					currentTarget: { value: React.SetStateAction<string> }
-				}) => setInputVal(e.currentTarget.value)}
+				onChange={(e: { currentTarget: { value: React.SetStateAction<string> } }) => setInputVal(e.currentTarget.value)}
 				disabled={true}
 				value={inputVal && new BigNumber(inputVal).times(0.001).toString()}
 				label={
@@ -67,17 +62,17 @@ const BallastSwapCard = styled(Card)`
 	width: 720px;
 	padding: 25px;
 	margin: auto;
-	background-color: ${(props) => props.theme.color.primary[100]};
-	border-radius: ${(props) => props.theme.borderRadius}px;
-	border: ${(props) => props.theme.border.default};
+	background-color: ${props => props.theme.color.primary[100]};
+	border-radius: ${props => props.theme.borderRadius}px;
+	border: ${props => props.theme.border.default};
 
 	label > span {
 		float: right;
 		margin-bottom: 0.25rem;
-		color: ${(props) => props.theme.color.text[200]};
+		color: ${props => props.theme.color.text[200]};
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		width: 100%;
 	}
 `
@@ -86,7 +81,7 @@ const SwapDirection = styled.a`
 	text-align: center;
 	display: block;
 	margin-top: 1em;
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 	user-select: none;
 	transition: 200ms;
 
@@ -96,12 +91,12 @@ const SwapDirection = styled.a`
 `
 
 const SwapDirectionBadge = styled(Badge)`
-	background-color: ${(props) => props.theme.color.primary[300]} !important;
-	color: ${(props) => props.theme.color.text[100]};
+	background-color: ${props => props.theme.color.primary[300]} !important;
+	color: ${props => props.theme.color.text[100]};
 	border: none;
 	margin-bottom: 0.5rem;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		font-size: 0.875rem !important;
 	}
 `
@@ -109,11 +104,11 @@ const SwapDirectionBadge = styled(Badge)`
 const BallastLabel = styled.label`
 	font-size: 1rem;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.md}px) {
+	@media (max-width: ${props => props.theme.breakpoints.md}px) {
 		font-size: 0.875rem !important;
 	}
 
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		font-size: 0.75rem !important;
 	}
 `

@@ -26,10 +26,7 @@ const Nav: React.FC = () => {
 			<StyledLink end to={{ pathname: '/lock' }}>
 				Lock
 			</StyledLink>
-			<StyledAbsoluteLink
-				href="https://snapshot.page/#/baovotes.eth"
-				target="_blank"
-			>
+			<StyledAbsoluteLink href='https://snapshot.page/#/baovotes.eth' target='_blank'>
 				Vote
 			</StyledAbsoluteLink>
 			<StyledAbsoluteLink href='https://gov.bao.finance' target='_blank'>

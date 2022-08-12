@@ -310,8 +310,8 @@ svg.menuIcon {
   --bs-nav-link-padding-x: 1rem;
   --bs-nav-link-padding-y: 0.5rem;
   --bs-nav-link-font-weight: ;
-  --bs-nav-link-color: ${(props) => props.theme.color.text[200]};
-  --bs-nav-link-hover-color: ${(props) => props.theme.color.text[100]};
+  --bs-nav-link-color: ${props => props.theme.color.text[200]};
+  --bs-nav-link-hover-color: ${props => props.theme.color.text[100]};
   --bs-nav-link-disabled-color: #6c757d;
 }
 
@@ -325,7 +325,7 @@ border-bottom: none;
 .nav-pills {
   --bs-nav-pills-border-radius: 0.375rem;
   --bs-nav-pills-link-active-color: #fff;
-  --bs-nav-pills-link-active-bg: ${(props) => props.theme.color.primary[300]};
+  --bs-nav-pills-link-active-bg: ${props => props.theme.color.primary[300]};
 }
 
 .react-datepicker-wrapper {
@@ -335,10 +335,10 @@ border-bottom: none;
 }
 
 .input-group-text {
-  color: ${(props) => props.theme.color.text[100]};
-  background: ${(props) => props.theme.color.primary[200]};
+  color: ${props => props.theme.color.text[100]};
+  background: ${props => props.theme.color.primary[200]};
   border: none;
-  border-right: 1px ${(props) => props.theme.color.primary[100]};
+  border-right: 1px ${props => props.theme.color.primary[100]};
 }
 
 .react-date-picker__inputGroup__divider {
@@ -351,7 +351,7 @@ border-bottom: none;
 }
 
 .react-date-picker__inputGroup__input {
-  color: ${(props) => props.theme.color.text[100]};
+  color: ${props => props.theme.color.text[100]};
   font-size: 1rem;
 }
 `
