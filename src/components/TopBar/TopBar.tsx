@@ -1,3 +1,4 @@
+import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { MenuIcon } from 'components/Icon'
 import Logo from 'components/Logo'
@@ -13,11 +14,7 @@ interface TopBarProps {
 	onPresentMobileMenu: () => void
 }
 
-const TopBar: React.FC<TopBarProps> = ({
-	onPresentMobileMenu,
-	isDarkMode,
-	toggleTheme,
-}) => {
+const TopBar: React.FC<TopBarProps> = ({ onPresentMobileMenu, isDarkMode, toggleTheme }) => {
 	return (
 		<StyledTopBar>
 			<StyledTopBarInner>
@@ -30,8 +27,8 @@ const TopBar: React.FC<TopBarProps> = ({
 				<StyledAccountButtonWrapper>
 					<AccountButton />
 					<StyledThemeButton>
-						<Button onClick={toggleTheme}>
-							<FontAwesomeIcon icon={isDarkMode ? 'moon' : 'sun'} />
+						<Button onClick={toggleTheme} aria-label='Dark Mode'>
+							<FontAwesomeIcon icon={isDarkMode ? faMoon : faSun} />
 						</Button>
 					</StyledThemeButton>
 					<StyledMenuButton onClick={onPresentMobileMenu}>
@@ -45,34 +42,34 @@ const TopBar: React.FC<TopBarProps> = ({
 
 const StyledLogoWrapper = styled.div`
 	width: 200px;
-	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
 		width: auto;
 	}
 `
 const StyledTopBar = styled.div`
 	margin: auto;
-	border-bottom: ${(props) => props.theme.border.default};
+	border-bottom: ${props => props.theme.border.default};
 	width: 100%;
 	position: fixed;
 	z-index: 999999;
-	background: ${(props) => props.theme.color.background[100]};
+	background: ${props => props.theme.color.background[100]};
 `
 
 const StyledNavWrapper = styled.div`
 	display: flex;
 	flex: 1;
 	justify-content: center;
-	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
 		display: none;
 	}
 `
 
 const StyledTopBarInner = styled.div`
-	background: ${(props) => props.theme.color.background[100]};
+	background: ${props => props.theme.color.background[100]};
 	margin: auto;
 	align-items: center;
 	display: flex;
-	height: ${(props) => props.theme.topBarSize}px;
+	height: ${props => props.theme.topBarSize}px;
 	justify-content: space-between;
 	width: 98%;
 	z-index: 999999;
@@ -83,7 +80,7 @@ const StyledAccountButtonWrapper = styled.div`
 	display: flex;
 	justify-content: flex-end;
 	width: 200px;
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
 		justify-content: center;
 		width: auto;
 	}
@@ -97,13 +94,13 @@ const StyledMenuButton = styled.button`
 	padding: 0;
 	display: none;
 
-	@media (max-width: ${(props) => props.theme.breakpoints.xl}px) {
+	@media (max-width: ${props => props.theme.breakpoints.xl}px) {
 		align-items: center;
 		display: flex;
 		height: 44px;
 		justify-content: center;
 		width: 44px;
-		margin-left: ${(props) => props.theme.spacing[2]}px;
+		margin-left: ${props => props.theme.spacing[2]}px;
 	}
 `
 

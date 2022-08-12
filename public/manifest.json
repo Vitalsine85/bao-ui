@@ -1,15 +1,10 @@
 {
-  "short_name": "Bao Finance",
-  "name": "Farm Your Basket!",
-  "icons": [
-    {
-      "src": "favicon.png",
-      "type": "image/png",
-      "sizes": "240x240"
-    }
-  ],
-  "start_url": ".",
+  "name": "Bao Finance",
+  "description": "Deliciously wrapped finance!",
+  "short_name": "Bao",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
-}
+  "orientation": "portrait",
+  "theme_color": "#391818",
+  "background_color": "#210E0E",
+  "start_url": "/"
+  }

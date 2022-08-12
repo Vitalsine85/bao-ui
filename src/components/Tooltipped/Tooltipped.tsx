@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { OverlayTrigger, Tooltip } from 'react-bootstrap'
 import styled from 'styled-components'
 import { Placement } from 'react-bootstrap/types'
+import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface TooltippedProps {
 	content: any
@@ -10,20 +11,12 @@ interface TooltippedProps {
 	placement?: Placement
 }
 
-const Tooltipped: React.FC<TooltippedProps> = ({
-	children,
-	content,
-	placement,
-}) => (
+const Tooltipped: React.FC<TooltippedProps> = ({ children, content, placement }) => (
 	<>
-		<OverlayTrigger
-			key={placement}
-			overlay={<Tooltip id={Math.random().toString()}>{content}</Tooltip>}
-			placement={placement || 'bottom'}
-		>
+		<OverlayTrigger key={placement} overlay={<Tooltip id={Math.random().toString()}>{content}</Tooltip>} placement={placement || 'bottom'}>
 			{children || (
 				<span>
-					<QuestionIcon icon="question-circle" />
+					<QuestionIcon icon={faQuestionCircle} />
 				</span>
 			)}
 		</OverlayTrigger>
@@ -31,11 +24,11 @@ const Tooltipped: React.FC<TooltippedProps> = ({
 )
 
 const QuestionIcon = styled(FontAwesomeIcon)`
-	color: ${(props) => props.theme.color.text[100]};
+	color: ${props => props.theme.color.text[100]};
 
 	&:hover,
 	&:focus {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${props => props.theme.color.text[400]};
 		animation: 200ms;
 	}
 `

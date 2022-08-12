@@ -1,3 +1,4 @@
+import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
@@ -10,7 +11,7 @@ import useTransactionHandler from 'hooks/base/useTransactionHandler'
 import { useApprovals } from 'hooks/markets/useApprovals'
 import React from 'react'
 import { decimate } from 'utils/numberFormat'
-import { MarketOperations } from './Modals'
+import { MarketOperations } from './Modals/Modals'
 
 type MarketButtonProps = {
 	operation: MarketOperations
@@ -20,13 +21,7 @@ type MarketButtonProps = {
 	onHide: () => void
 }
 
-export const MarketButton = ({
-	operation,
-	asset,
-	val,
-	isDisabled,
-	onHide,
-}: MarketButtonProps) => {
+export const MarketButton = ({ operation, asset, val, isDisabled, onHide }: MarketButtonProps) => {
 	const { pendingTx, handleTx } = useTransactionHandler()
 	const { account } = useWeb3React()
 	const { approvals } = useApprovals(pendingTx)
@@ -38,11 +33,8 @@ export const MarketButton = ({
 			<ButtonStack>
 				<SubmitButton disabled={true}>
 					{typeof pendingTx === 'string' ? (
-						<ExternalLink
-							href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`}
-							target="_blank"
-						>
-							Pending Transaction <FontAwesomeIcon icon="external-link-alt" />
+						<ExternalLink href={`${Config.defaultRpc.blockExplorerUrls}/tx/${pendingTx}`} target='_blank'>
+							Pending Transaction <FontAwesomeIcon icon={faExternalLinkAlt} />
 						</ExternalLink>
 					) : (
 						'Pending Transaction'
@@ -55,9 +47,7 @@ export const MarketButton = ({
 			case MarketOperations.supply:
 				return (
 					<ButtonStack>
-						{approvals &&
-						(asset.underlyingAddress === 'ETH' ||
-							approvals[asset.underlyingAddress].gt(0)) ? (
+						{approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 							<SubmitButton
 								disabled={isDisabled}
 								onClick={() => {
@@ -70,13 +60,7 @@ export const MarketButton = ({
 										mintTx = marketContract.methods
 											.mint(val.toString(), true) // TODO- Give the user the option in the SupplyModal to tick collateral on/off
 											.send({ from: account })
-									handleTx(
-										mintTx,
-										`Supply ${decimate(val, asset.underlyingDecimals).toFixed(
-											4,
-										)} ${asset.underlyingSymbol}`,
-										() => onHide(),
-									)
+									handleTx(mintTx, `Supply ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`, () => onHide())
 								}}
 							>
 								Supply
@@ -86,10 +70,7 @@ export const MarketButton = ({
 								disabled={!approvals}
 								onClick={() => {
 									const { underlyingContract } = asset
-									handleTx(
-										approvev2(underlyingContract, marketContract, account),
-										`Approve ${asset.underlyingSymbol} for Markets`,
-									)
+									handleTx(approvev2(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
 								}}
 							>
 								Approve {asset.underlyingSymbol}
@@ -105,12 +86,8 @@ export const MarketButton = ({
 							disabled={isDisabled}
 							onClick={() => {
 								handleTx(
-									marketContract.methods
-										.redeemUnderlying(val.toString())
-										.send({ from: account }),
-									`Withdraw ${decimate(val, asset.underlyingDecimals).toFixed(
-										4,
-									)} ${asset.underlyingSymbol}`,
+									marketContract.methods.redeemUnderlying(val.toString()).send({ from: account }),
+									`Withdraw ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`,
 									() => onHide(),
 								)
 							}}
@@ -126,12 +103,8 @@ export const MarketButton = ({
 						disabled={isDisabled}
 						onClick={() => {
 							handleTx(
-								marketContract.methods
-									.borrow(val.toString())
-									.send({ from: account }),
-								`Mint ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${
-									asset.symbol
-								}`,
+								marketContract.methods.borrow(val.toString()).send({ from: account }),
+								`Mint ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.symbol}`,
 								() => onHide(),
 							)
 						}}
@@ -143,28 +116,15 @@ export const MarketButton = ({
 			case MarketOperations.repay:
 				return (
 					<ButtonStack>
-						{approvals &&
-						(asset.underlyingAddress === 'ETH' ||
-							approvals[asset.underlyingAddress].gt(0)) ? (
+						{approvals && (asset.underlyingAddress === 'ETH' || approvals[asset.underlyingAddress].gt(0)) ? (
 							<SubmitButton
 								disabled={isDisabled}
 								onClick={() => {
 									let repayTx
 									if (asset.underlyingAddress === 'ETH')
-										repayTx = marketContract.methods
-											.repayBorrow()
-											.send({ from: account, value: val.toString() })
-									else
-										repayTx = marketContract.methods
-											.repayBorrow(val.toString())
-											.send({ from: account })
-									handleTx(
-										repayTx,
-										`Repay ${decimate(val, asset.underlyingDecimals).toFixed(
-											4,
-										)} ${asset.underlyingSymbol}`,
-										() => onHide(),
-									)
+										repayTx = marketContract.methods.repayBorrow().send({ from: account, value: val.toString() })
+									else repayTx = marketContract.methods.repayBorrow(val.toString()).send({ from: account })
+									handleTx(repayTx, `Repay ${decimate(val, asset.underlyingDecimals).toFixed(4)} ${asset.underlyingSymbol}`, () => onHide())
 								}}
 							>
 								Repay
@@ -174,10 +134,7 @@ export const MarketButton = ({
 								disabled={!approvals}
 								onClick={() => {
 									const { underlyingContract } = asset
-									handleTx(
-										approvev2(underlyingContract, marketContract, account),
-										`Approve ${asset.underlyingSymbol} for Markets`,
-									)
+									handleTx(approvev2(underlyingContract, marketContract, account), `Approve ${asset.underlyingSymbol} for Markets`)
 								}}
 							>
 								Approve {asset.underlyingSymbol}

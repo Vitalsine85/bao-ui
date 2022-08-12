@@ -8,17 +8,13 @@ import fetcher from 'bao/lib/fetcher'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'react-datepicker/dist/react-datepicker-cssmodules.min.css'
 import 'react-datepicker/dist/react-datepicker.css'
+import { SpinnerLoader } from 'components/Loader'
 import Web3ReactManager from 'components/Web3ReactManager'
 import GlobalStyle from 'GlobalStyle'
-import React, { ReactNode, useCallback, useEffect, useState } from 'react'
+import React, { ReactNode, Suspense, useCallback, useEffect, useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import { ThemeProvider } from 'styled-components'
+import styled, { ThemeProvider } from 'styled-components'
 import { SWRConfig } from 'swr'
-import Baskets from 'views/Baskets'
-import Basket from 'views/Baskets/Basket'
-import Market from 'views/Markets/Market'
-import Migration from 'views/Migration'
-import VEBAO from 'views/veBAO'
 import Web3 from 'web3'
 import { provider } from 'web3-core'
 import MobileMenu from './components/MobileMenu'
@@ -29,18 +25,22 @@ import MarketsProvider from './contexts/Markets'
 import ModalsProvider from './contexts/Modals'
 import TransactionProvider from './contexts/Transactions'
 import theme from './theme'
-import Ballast from './views/Ballast'
-import Farms from './views/Farms'
-import Markets from './views/Markets'
-import NFT from './views/NFT'
-
-library.add(fas, fab)
 
 function getLibrary(provider: provider) {
 	return new Web3(provider)
 }
 
 const Web3ReactNetworkProvider = createWeb3ReactRoot('network')
+
+const Markets = React.lazy(() => import('views/Markets'))
+const Market = React.lazy(() => import('views/Markets/Market'))
+const Ballast = React.lazy(() => import('views/Ballast'))
+const Baskets = React.lazy(() => import('views/Baskets'))
+const Basket = React.lazy(() => import('views/Baskets/Basket'))
+const Farms = React.lazy(() => import('views/Farms'))
+const NFT = React.lazy(() => import('views/NFT'))
+const Migration = React.lazy(() => import('views/Migration'))
+const Lock = React.lazy(() => import('views/veBAO'))
 
 const App: React.FC = () => {
 	const [mobileMenu, setMobileMenu] = useState(false)
@@ -61,8 +61,7 @@ const App: React.FC = () => {
 
 	// Remember darkmode prefs
 	useEffect(() => {
-		if (localStorage.getItem('darkMode') === null)
-			localStorage.setItem('darkMode', 'false')
+		if (localStorage.getItem('darkMode') === null) localStorage.setItem('darkMode', 'false')
 		const isDarkMode = localStorage.getItem('darkMode') === 'true'
 		setIsDarkMode(isDarkMode)
 	}, [])
@@ -70,32 +69,27 @@ const App: React.FC = () => {
 	return (
 		<Providers isDarkMode={isDarkMode}>
 			<Router>
-				<TopBar
-					isDarkMode={isDarkMode}
-					toggleTheme={toggleTheme}
-					onPresentMobileMenu={handlePresentMobileMenu}
-				/>
+				<TopBar isDarkMode={isDarkMode} toggleTheme={toggleTheme} onPresentMobileMenu={handlePresentMobileMenu} />
 				<MobileMenu onDismiss={handleDismissMobileMenu} visible={mobileMenu} />
-				<Routes>
-					<Route path="/" element={<Markets />} />
-					<Route path="/markets/:marketId" element={<Market />} />
-					<Route path="/ballast" element={<Ballast />} />
-					<Route path="/farms" element={<Farms />} />
-					<Route path="/baskets" element={<Baskets />} />
-					<Route path="/baskets/:basketId" element={<Basket />} />
-					<Route path="/nft" element={<NFT />} />
-					<Route path="/migration" element={<Migration />} />
-					<Route path="/vebao" element={<VEBAO />} />
-				</Routes>
+				<Suspense fallback={<SpinnerLoader />}>
+					<Routes>
+						<Route path='/' element={<Markets />} />
+						<Route path='/markets/:marketId' element={<Market />} />
+						<Route path='/ballast' element={<Ballast />} />
+						<Route path='/farms' element={<Farms />} />
+						<Route path='/baskets' element={<Baskets />} />
+						<Route path='/baskets/:basketId' element={<Basket />} />
+						<Route path='/NFT' element={<NFT />} />
+						<Route path='/migration' element={<Migration />} />
+						<Route path='/lock' element={<Lock />} />
+					</Routes>
+				</Suspense>
 			</Router>
 		</Providers>
 	)
 }
 
-const Providers: React.FC<ProvidersProps> = ({
-	children,
-	isDarkMode,
-}: ProvidersProps) => {
+const Providers: React.FC<ProvidersProps> = ({ children, isDarkMode }: ProvidersProps) => {
 	return (
 		<ThemeProvider theme={theme(isDarkMode)}>
 			<GlobalStyle />

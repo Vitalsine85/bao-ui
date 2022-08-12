@@ -23,8 +23,8 @@ const Nav: React.FC = () => {
 			<StyledLink end to={{ pathname: '/migration' }}>
 				Migration
 			</StyledLink>
-			<StyledLink end to={{ pathname: '/vebao' }}>
-				veBAO
+			<StyledLink end to={{ pathname: '/lock' }}>
+				Lock
 			</StyledLink>
 			<StyledAbsoluteLink
 				href="https://snapshot.page/#/baovotes.eth"
@@ -32,10 +32,10 @@ const Nav: React.FC = () => {
 			>
 				Vote
 			</StyledAbsoluteLink>
-			<StyledAbsoluteLink href="https://gov.bao.finance" target="_blank">
+			<StyledAbsoluteLink href='https://gov.bao.finance' target='_blank'>
 				Forum
 			</StyledAbsoluteLink>
-			<StyledAbsoluteLink href="https://docs.bao.finance" target="_blank">
+			<StyledAbsoluteLink href='https://docs.bao.finance' target='_blank'>
 				Docs
 			</StyledAbsoluteLink>
 		</StyledNav>
@@ -52,20 +52,20 @@ const StyledLink = styled(NavLink)`
 	transition-duration: 200ms;
 	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	font-family: 'Rubik', sans-serif;
-	color: ${(props) => props.theme.color.text[100]};
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	padding-left: ${(props) => props.theme.spacing[3]}px;
-	padding-right: ${(props) => props.theme.spacing[3]}px;
+	color: ${props => props.theme.color.text[100]};
+	font-weight: ${props => props.theme.fontWeight.medium};
+	padding-left: ${props => props.theme.spacing[3]}px;
+	padding-right: ${props => props.theme.spacing[3]}px;
 	text-decoration: none;
 	&:hover {
-		color: ${(props) => props.theme.color.text[300]};
+		color: ${props => props.theme.color.text[300]};
 	}
 	&.active {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${props => props.theme.color.text[400]};
 	}
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		padding-left: ${(props) => props.theme.spacing[2]}px;
-		padding-right: ${(props) => props.theme.spacing[2]}px;
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
+		padding-left: ${props => props.theme.spacing[2]}px;
+		padding-right: ${props => props.theme.spacing[2]}px;
 	}
 `
 
@@ -74,20 +74,20 @@ const StyledAbsoluteLink = styled.a`
 	transition-duration: 200ms;
 	transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
 	font-family: 'Rubik', sans-serif;
-	color: ${(props) => props.theme.color.text[100]};
-	font-weight: ${(props) => props.theme.fontWeight.medium};
-	padding-left: ${(props) => props.theme.spacing[3]}px;
-	padding-right: ${(props) => props.theme.spacing[3]}px;
+	color: ${props => props.theme.color.text[100]};
+	font-weight: ${props => props.theme.fontWeight.medium};
+	padding-left: ${props => props.theme.spacing[3]}px;
+	padding-right: ${props => props.theme.spacing[3]}px;
 	text-decoration: none;
 	&:hover {
-		color: ${(props) => props.theme.color.text[300]};
+		color: ${props => props.theme.color.text[300]};
 	}
 	&.active {
-		color: ${(props) => props.theme.color.text[400]};
+		color: ${props => props.theme.color.text[400]};
 	}
-	@media (max-width: ${(props) => props.theme.breakpoints.sm}px) {
-		padding-left: ${(props) => props.theme.spacing[2]}px;
-		padding-right: ${(props) => props.theme.spacing[2]}px;
+	@media (max-width: ${props => props.theme.breakpoints.sm}px) {
+		padding-left: ${props => props.theme.spacing[2]}px;
+		padding-right: ${props => props.theme.spacing[2]}px;
 	}
 `
 

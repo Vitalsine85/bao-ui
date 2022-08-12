@@ -1,3 +1,4 @@
+import { faWifi } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useWeb3React } from '@web3-react/core'
 import Config from 'bao/lib/config'
@@ -18,9 +19,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ icon, onConnect, title }) => {
 
 	const [buttonText, setButtonText] = useState<any>()
 	useEffect(() => {
-		_getButtonText(wallet.ethereum, wallet.status).then((res: any) =>
-			setButtonText(res),
-		)
+		_getButtonText(wallet.ethereum, wallet.status).then((res: any) => setButtonText(res))
 	}, [wallet])
 
 	return (
@@ -33,7 +32,7 @@ const WalletCard: React.FC<WalletCardProps> = ({ icon, onConnect, title }) => {
 					text={
 						buttonText || (
 							<span>
-								<FontAwesomeIcon icon="wifi" /> Wrong Network
+								<FontAwesomeIcon icon={faWifi} /> Wrong Network
 							</span>
 						)
 					}
@@ -66,7 +65,7 @@ const _getButtonText = async (ethereum: any, status: string): Promise<any> => {
 export default WalletCard
 
 const WalletIcon = styled.div`
-	background-color: ${(props) => props.theme.color.primary[200]};
+	background-color: ${props => props.theme.color.primary[200]};
 	font-size: 36px;
 	height: 80px;
 	width: 80px;
@@ -74,13 +73,13 @@ const WalletIcon = styled.div`
 	align-items: center;
 	display: flex;
 	justify-content: center;
-	margin: 0 auto ${(props) => props.theme.spacing[3]}px;
+	margin: 0 auto ${props => props.theme.spacing[3]}px;
 `
 
 const WalletTitle = styled.div`
-	color: ${(props) => props.theme.color.text[200]};
+	color: ${props => props.theme.color.text[200]};
 	font-size: 18px;
 	font-weight: 700;
-	padding: ${(props) => props.theme.spacing[4]}px;
+	padding: ${props => props.theme.spacing[4]}px;
 	text-align: center;
 `

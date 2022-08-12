@@ -22,6 +22,8 @@ import { BigNumber } from 'bignumber.js'
 import { decimate, getDisplayBalance } from '../../../../utils/numberFormat'
 import useOvenInfo from '../../../../hooks/baskets/useOvenInfo'
 import { StatBlock } from '../../../../components/Stats'
+import { faTimes } from '@fortawesome/free-solid-svg-icons'
+import { faEthereum } from '@fortawesome/free-brands-svg-icons'
 
 type ModalProps = {
 	basket: ActiveSupportedBasket
@@ -40,19 +42,17 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 	useEffect(() => {
 		if (!(bao && account)) return
 
-		bao.web3.eth
-			.getBalance(account)
-			.then((balance) => setEthBalance(decimate(balance)))
+		bao.web3.eth.getBalance(account).then(balance => setEthBalance(decimate(balance)))
 	}, [bao, account])
 
 	return basket ? (
 		<>
 			<Modal show={show} onHide={hideModal} centered>
 				<CloseButton onClick={hideModal}>
-					<FontAwesomeIcon icon="times" />
+					<FontAwesomeIcon icon={faTimes} />
 				</CloseButton>
 				<Modal.Header>
-					<Modal.Title id="contained-modal-title-vcenter">
+					<Modal.Title id='contained-modal-title-vcenter'>
 						<HeaderWrapper>
 							<p>{basket.symbol} Oven</p>
 							<img src={basket.icon} />
@@ -61,15 +61,14 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 				</Modal.Header>
 				<Modal.Body>
 					<StatBlock
-						label="Oven Information"
+						label='Oven Information'
 						stats={
 							ovenInfo && [
 								{
 									label: 'Total ETH Deposited',
 									value: (
 										<span>
-											{getDisplayBalance(ovenInfo.balance)}{' '}
-											<FontAwesomeIcon icon={['fab', 'ethereum']} />
+											{getDisplayBalance(ovenInfo.balance)} <FontAwesomeIcon icon={faEthereum} />
 										</span>
 									),
 								},
@@ -77,8 +76,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 									label: 'Your Deposit',
 									value: (
 										<span>
-											{getDisplayBalance(ovenInfo.userBalance)}{' '}
-											<FontAwesomeIcon icon={['fab', 'ethereum']} />
+											{getDisplayBalance(ovenInfo.userBalance)} <FontAwesomeIcon icon={faEthereum} />
 										</span>
 									),
 								},
@@ -94,9 +92,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 								<LabelEnd>
 									<LabelStack>
 										<MaxLabel>{`Available:`}</MaxLabel>
-										<AssetLabel>
-											{`${ethBalance && ethBalance.toFixed(4)} ETH`}
-										</AssetLabel>
+										<AssetLabel>{`${ethBalance && ethBalance.toFixed(4)} ETH`}</AssetLabel>
 									</LabelStack>
 								</LabelEnd>
 							</Col>
@@ -105,12 +101,12 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 							<Col xs={12}>
 								<BalanceInput
 									value={value}
-									onChange={(e) => setValue(e.currentTarget.value)}
+									onChange={e => setValue(e.currentTarget.value)}
 									onMaxClick={undefined}
 									label={
 										<AssetStack>
 											<IconFlex>
-												<FontAwesomeIcon icon={['fab', 'ethereum']} />
+												<FontAwesomeIcon icon={faEthereum} />
 											</IconFlex>
 										</AssetStack>
 									}
@@ -120,9 +116,7 @@ const OvenModal: React.FC<ModalProps> = ({ basket, show, hideModal }) => {
 					</ModalStack>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button onClick={undefined}>
-						{!value ? 'Enter a Value' : `Deposit ${value} ETH`}
-					</Button>
+					<Button onClick={undefined}>{!value ? 'Enter a Value' : `Deposit ${value} ETH`}</Button>
 				</Modal.Footer>
 			</Modal>
 		</>

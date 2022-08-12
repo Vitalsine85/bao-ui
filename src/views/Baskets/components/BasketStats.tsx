@@ -1,3 +1,11 @@
+import {
+	faAngleDoubleDown,
+	faAngleDoubleUp,
+	faCoins,
+	faHandHoldingUsd,
+	faMoneyBill1Wave,
+	faMoneyBillWave,
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BigNumber } from 'bignumber.js'
 import { StatBadge } from 'components/Badge/Badge'
@@ -19,13 +27,7 @@ type BasketStatsProps = {
 	pairPrice: BigNumber | undefined
 }
 
-const BasketStats: React.FC<BasketStatsProps> = ({
-	basket,
-	composition,
-	rates,
-	info,
-	pairPrice,
-}) => {
+const BasketStats: React.FC<BasketStatsProps> = ({ basket, composition, rates, info, pairPrice }) => {
 	const nav = useNav(composition, info && info.totalSupply)
 
 	return (
@@ -33,40 +35,31 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon="hand-holding-usd" />
+						<FontAwesomeIcon icon={faHandHoldingUsd} />
 						<br />
 						Market Cap
 					</span>
 					<Spacer size={'sm'} />
-					<StatBadge bg="secondary">
-						{rates && info ? (
-							`$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}`
-						) : (
-							<SpinnerLoader />
-						)}
+					<StatBadge bg='secondary'>
+						{rates && info ? `$${getDisplayBalance(rates.usd.times(info.totalSupply), 36)}` : <SpinnerLoader />}
 					</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon="coins" />
+						<FontAwesomeIcon icon={faCoins} />
 						<br />
 						Supply
 					</span>
 					<Spacer size={'sm'} />
-					<StatBadge bg="secondary">
-						{(info &&
-							`${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || (
-							<SpinnerLoader />
-						)}
-					</StatBadge>
+					<StatBadge bg='secondary'>{(info && `${getDisplayBalance(info.totalSupply)} ${basket.symbol}`) || <SpinnerLoader />}</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon="money-bill-wave" />
+						<FontAwesomeIcon icon={faMoneyBillWave} />
 						<br />
 						NAV{' '}
 						<Tooltipped
@@ -76,16 +69,14 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StatBadge bg="secondary">
-						{nav ? `$${getDisplayBalance(nav, 0)}` : <SpinnerLoader />}
-					</StatBadge>
+					<StatBadge bg='secondary'>{nav ? `$${getDisplayBalance(nav, 0)}` : <SpinnerLoader />}</StatBadge>
 				</StatCard>
 			</Col>
 			<Col>
 				<StatCard>
 					<span>
-						<FontAwesomeIcon icon="angle-double-up" />
-						<FontAwesomeIcon icon="angle-double-down" />
+						<FontAwesomeIcon icon={faAngleDoubleUp} />
+						<FontAwesomeIcon icon={faAngleDoubleDown} />
 						<br />
 						Premium{' '}
 						<Tooltipped
@@ -94,7 +85,7 @@ const BasketStats: React.FC<BasketStatsProps> = ({
 						/>
 					</span>
 					<Spacer size={'sm'} />
-					<StatBadge bg="secondary">
+					<StatBadge bg='secondary'>
 						{pairPrice && rates ? (
 							// `${getDisplayBalance(
 							// 	pairPrice
